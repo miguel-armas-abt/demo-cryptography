@@ -27,7 +27,7 @@ spring:
     driverClassName: org.h2.Driver
     platform: h2
     username: admin
-    password: qwerty
+    password: ${H2_PASSWORD:qwerty}
 
 configuration:
   error-messages:
