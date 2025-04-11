@@ -1,6 +1,6 @@
 package com.demo.poc.commons.core.interceptor.error;
 
-import static com.demo.poc.commons.core.errors.enums.ErrorDictionary.INVALID_INPUT_FIELD;
+import static com.demo.poc.commons.custom.exceptions.ErrorDictionary.INVALID_FIELD;
 import static com.demo.poc.commons.core.logging.utils.HeaderExtractor.extractTraceHeaders;
 
 import com.demo.poc.commons.core.errors.dto.ErrorDto;
@@ -56,7 +56,7 @@ public class ErrorInterceptor extends ResponseEntityExceptionHandler {
         .collect(Collectors.joining(";"));
 
     ErrorDto error = ErrorDto.builder()
-        .code(INVALID_INPUT_FIELD.getCode())
+        .code(INVALID_FIELD.getCode())
         .message(errorMessage)
         .build();
     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
