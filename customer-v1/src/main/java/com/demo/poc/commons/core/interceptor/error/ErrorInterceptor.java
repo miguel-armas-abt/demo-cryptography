@@ -15,10 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.net.ConnectException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,6 +38,10 @@ public class ErrorInterceptor extends ResponseEntityExceptionHandler {
 
     ErrorDto error = ErrorDto.getDefaultError(properties);
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
+    if (ex instanceof ResourceAccessException || ex instanceof ConnectException) {
+      httpStatus = HttpStatus.REQUEST_TIMEOUT;
+    }
 
     if(ex instanceof GenericException genericException) {
       error = genericException.getErrorDetail();
@@ -59,6 +67,19 @@ public class ErrorInterceptor extends ResponseEntityExceptionHandler {
         .code(INVALID_FIELD.getCode())
         .message(errorMessage)
         .build();
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(MissingRequestHeaderException.class)
+  public ResponseEntity<ErrorDto> handleMissingRequestHeader(MissingRequestHeaderException exception, WebRequest request) {
+    generateTrace(exception, request);
+
+    String message = exception.getBody().getDetail();
+    ErrorDto error = ErrorDto.builder()
+            .code(INVALID_FIELD.getCode())
+            .message(message)
+            .build();
+
     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
