@@ -21,10 +21,10 @@ public enum ErrorDictionary {
 
     //system=00
     INVALID_FIELD("02.00.01", "Invalid field", BAD_REQUEST, InvalidFieldException.class),
-    NO_SUCH_REST_CLIENT("01.00.02", "No such rest client", INTERNAL_SERVER_ERROR, NoSuchRestClientException.class),
-    NO_SUCH_CACHE_CONFIG("01.00.03", "No such cache config", INTERNAL_SERVER_ERROR, NoSuchCacheConfigException.class),
-    ERROR_MAPPING_REFLECTIVE_PARAMS("01.00.04", "Error mapping reflective params", INTERNAL_SERVER_ERROR, ReflectiveParamMappingException.class),
-    ERROR_ASSIGN_REFLECTIVE_PARAMS("01.00.05", "Error assign reflective params", INTERNAL_SERVER_ERROR, ReflectiveParamAssignmentException.class),
+    NO_SUCH_REST_CLIENT("02.00.02", "No such rest client", INTERNAL_SERVER_ERROR, NoSuchRestClientException.class),
+    NO_SUCH_CACHE_CONFIG("02.00.03", "No such cache config", INTERNAL_SERVER_ERROR, NoSuchCacheConfigException.class),
+    ERROR_MAPPING_REFLECTIVE_PARAMS("02.00.04", "Error mapping reflective params", INTERNAL_SERVER_ERROR, ReflectiveParamMappingException.class),
+    ERROR_ASSIGN_REFLECTIVE_PARAMS("02.00.05", "Error assign reflective params", INTERNAL_SERVER_ERROR, ReflectiveParamAssignmentException.class),
 
     //custom=01
     NO_SUCH_ENCRYPTION_METHOD("02.01.01", "No such encryption method", INTERNAL_SERVER_ERROR, NoSuchEncryptionMethodException.class),

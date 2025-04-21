@@ -11,6 +11,7 @@ import com.demo.poc.customer.repository.customer.CustomerRepository;
 import com.demo.poc.customer.enums.DocumentType;
 import com.demo.poc.customer.repository.customer.entity.CustomerEntity;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,41 +27,41 @@ public class CustomerServiceImpl implements CustomerService {
   private final CryptographyRepository cryptographyRepository;
 
   @Override
-  public List<CustomerResponseDto> findByDocumentType(String documentType) {
+  public List<CustomerResponseDto> findByDocumentType(Map<String, String> headers, String documentType) {
     return (Optional.ofNullable(documentType).isEmpty()
           ? customerRepository.findAll()
-          : this.validateCustomerAndFindByDocumentType(documentType))
+          : this.validateCustomerAndFindByDocumentType(headers, documentType))
         .stream()
         .map(customerMapper::toResponseDto)
         .collect(Collectors.toList());
   }
 
-  private List<CustomerEntity> validateCustomerAndFindByDocumentType(String documentType) {
+  private List<CustomerEntity> validateCustomerAndFindByDocumentType(Map<String, String> headers, String documentType) {
     DocumentType.validateDocumentType.accept(documentType);
     return customerRepository.findByDocumentType(documentType);
   }
 
   @Override
-  public CustomerResponseDto findByUniqueCode(Long uniqueCode) {
+  public CustomerResponseDto findByUniqueCode(Map<String, String> headers, Long uniqueCode) {
     return customerRepository.findByUniqueCode(uniqueCode)
         .map(customerMapper::toResponseDto)
         .orElseThrow(CustomerNotFoundException::new);
   }
 
   @Override
-  public Long save(CustomerRequestDto customerRequest) {
+  public Long save(Map<String, String> headers, CustomerRequestDto customerRequest) {
     if (customerRepository.findByUniqueCode(customerRequest.getUniqueCode()).isPresent()) {
       throw new CustomerAlreadyExistsException();
     }
-    String cipheredPassword = cryptographyRepository.encrypt(customerRequest.getPassword());
+    String cipheredPassword = cryptographyRepository.encrypt(headers, customerRequest.getPassword());
     return customerRepository.save(customerMapper.toEntity(customerRequest, cipheredPassword)).getUniqueCode();
   }
 
   @Override
-  public Long update(Long uniqueCode, CustomerRequestDto customerRequest) {
+  public Long update(Map<String, String> headers, Long uniqueCode, CustomerRequestDto customerRequest) {
     return customerRepository.findByUniqueCode(uniqueCode)
       .map(customerFound -> {
-        String cipheredPassword = cryptographyRepository.encrypt(customerRequest.getPassword());
+        String cipheredPassword = cryptographyRepository.encrypt(headers, customerRequest.getPassword());
 
         CustomerEntity customerEntity = customerMapper.toEntity(customerRequest, cipheredPassword);
         customerEntity.setId(customerFound.getId());
@@ -72,7 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public Long deleteByUniqueCode(Long uniqueCode) {
+  public Long deleteByUniqueCode(Map<String, String> headers, Long uniqueCode) {
     return customerRepository.findByUniqueCode(uniqueCode)
         .map(menuOptionFound -> {
           customerRepository.deleteById(menuOptionFound.getId());

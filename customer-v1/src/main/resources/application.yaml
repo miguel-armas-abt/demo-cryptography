@@ -35,7 +35,12 @@ configuration:
 
   rest-clients:
     cryptography-v1:
-      endpoint: ${CRYPTOGRAPHY_V1_ENDPOINT:http://localhost:8094/poc/cryptography/v1/encryption}
-      headers:
-        encryptionMethod: ${CRYPTOGRAPHY_V1_HEADER_ENCRYPTION_METHOD:AES}
-        feature: ${CRYPTOGRAPHY_V1_HEADER_FEATURE:customers}
+      request:
+        endpoint: ${CRYPTOGRAPHY_V1_ENDPOINT:http://localhost:8094/poc/cryptography/v1/encryption}
+        headers:
+          provided:
+            encryptionMethod: ${CRYPTOGRAPHY_V1_HEADER_ENCRYPTION_METHOD:AES}
+            feature: ${CRYPTOGRAPHY_V1_HEADER_FEATURE:customers}
+      performance:
+        timeout: GOOD
+        concurrency: MEDIUM

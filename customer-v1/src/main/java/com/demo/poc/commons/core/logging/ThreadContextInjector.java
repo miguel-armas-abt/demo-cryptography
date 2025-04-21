@@ -1,64 +1,86 @@
 package com.demo.poc.commons.core.logging;
 
-import java.util.Map;
-import com.demo.poc.commons.core.logging.enums.LoggingType;
 import com.demo.poc.commons.core.logging.constants.RestLoggingConstant;
 import com.demo.poc.commons.core.logging.utils.HeaderExtractor;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
 
+import org.springframework.web.server.ServerWebExchange;
+
+import java.util.Map;
+import java.util.Optional;
+
+import static com.demo.poc.commons.core.logging.constants.RestLoggingConstant.BODY;
+import static com.demo.poc.commons.core.logging.constants.RestLoggingConstant.HEADERS;
+import static com.demo.poc.commons.core.logging.constants.RestLoggingConstant.METHOD;
+import static com.demo.poc.commons.core.logging.constants.RestLoggingConstant.STATUS;
+import static com.demo.poc.commons.core.logging.constants.RestLoggingConstant.URI;
+import static com.demo.poc.commons.core.logging.enums.LoggingType.REST_CLIENT_REQ;
+import static com.demo.poc.commons.core.logging.enums.LoggingType.REST_CLIENT_RES;
+import static com.demo.poc.commons.core.logging.enums.LoggingType.REST_SERVER_REQ;
+import static com.demo.poc.commons.core.logging.enums.LoggingType.REST_SERVER_RES;
+import static com.demo.poc.commons.core.tracing.utils.TraceHeaderExtractor.extractTraceHeadersAsMap;
+
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class ThreadContextInjector {
 
-  public static void putInContext(String key, String value) {
+  private static void putInContext(String key, String value) {
     ThreadContext.put(key, StringUtils.defaultString(value));
   }
 
-  public static void populateFromHeaders(Map<String, String> traceHeaders) {
+  public void populateFromTraceHeaders(Map<String, String> traceHeaders) {
     traceHeaders.forEach(ThreadContextInjector::putInContext);
   }
 
-  public static void populateFromRestClientRequest(String method, String uri, Map<String, String> headers, String body) {
-    populateFromRestRequest(LoggingType.REST_CLIENT_REQ.getCode(), method, uri, headers, body);
-    log.info(LoggingType.REST_CLIENT_REQ.getMessage());
+  public void populateFromRestClientRequest(String method, String uri, Map<String, String> headers, String body) {
+    populateFromRestRequest(REST_CLIENT_REQ.getCode(), method, uri, headers, body);
+    log.info(REST_CLIENT_REQ.getMessage());
     ThreadContext.clearAll();
   }
 
-  public static void populateFromRestClientResponse(Map<String, String> headers, String uri, String body, String httpCode) {
-    populateFromRestResponse(LoggingType.REST_CLIENT_RES.getCode(), uri, headers, body, httpCode);
-    log.info(LoggingType.REST_CLIENT_RES.getMessage());
+  public void populateFromRestClientResponse(Map<String, String> headers, String uri, String body, String httpCode) {
+    populateFromRestResponse(REST_CLIENT_RES.getCode(), uri, headers, body, httpCode);
+    log.info(REST_CLIENT_RES.getMessage());
     ThreadContext.clearAll();
   }
 
-  public static void populateFromRestServerRequest(String method, String uri, Map<String, String> headers, String body) {
-    populateFromRestRequest(LoggingType.REST_SERVER_REQ.getCode(), method, uri, headers, body);
-    log.info(LoggingType.REST_SERVER_REQ.getMessage());
+  public void populateFromRestServerRequest(String method, String uri, Map<String, String> headers, String body) {
+    populateFromRestRequest(REST_SERVER_REQ.getCode(), method, uri, headers, body);
+    log.info(REST_SERVER_REQ.getMessage());
     ThreadContext.clearAll();
   }
 
-  public static void populateFromRestServerResponse(Map<String, String> headers, String uri, String body, String httpCode) {
-    populateFromRestResponse(LoggingType.REST_SERVER_RES.getCode(), uri, headers, body, httpCode);
-    log.info(LoggingType.REST_SERVER_RES.getMessage());
+  public void populateFromRestServerResponse(Map<String, String> headers, String uri, String body, String httpCode) {
+    populateFromRestResponse(REST_SERVER_RES.getCode(), uri, headers, body, httpCode);
+    log.info(REST_SERVER_RES.getMessage());
     ThreadContext.clearAll();
   }
 
-  private static void populateFromRestRequest(String prefix, String method, String uri, Map<String, String> headers, String body) {
-    populateFromHeaders(HeaderExtractor.extractTraceHeaders(headers));
-    putInContext(prefix + RestLoggingConstant.METHOD, method);
+  public void populateFromException(Throwable ex, ServerWebExchange exchange) {
+    String message = Optional.ofNullable(ex.getMessage()).orElse("Undefined error message");
+
+    populateFromTraceHeaders(extractTraceHeadersAsMap(exchange.getRequest().getHeaders()::getFirst));
+    log.error(message, ex);
+    ThreadContext.clearAll();
+  }
+
+  private void populateFromRestRequest(String prefix, String method, String uri, Map<String, String> headers, String body) {
+    populateFromTraceHeaders(extractTraceHeadersAsMap(headers::get));
+    putInContext(prefix + METHOD, method);
+    putInContext(prefix + URI, uri);
+    putInContext(prefix + HEADERS, HeaderExtractor.getHeadersAsString(headers));
+    putInContext(prefix + BODY, body);
+  }
+
+  private void populateFromRestResponse(String prefix, String uri, Map<String, String> headers, String body, String httpCode) {
+    populateFromTraceHeaders(extractTraceHeadersAsMap(headers::get));
+    putInContext(prefix + HEADERS, HeaderExtractor.getHeadersAsString(headers));
     putInContext(prefix + RestLoggingConstant.URI, uri);
-    putInContext(prefix + RestLoggingConstant.HEADERS, HeaderExtractor.getHeadersAsString(headers));
-    putInContext(prefix + RestLoggingConstant.BODY, body);
+    putInContext(prefix + BODY, body);
+    putInContext(prefix + STATUS, httpCode);
   }
 
-  private static void populateFromRestResponse(String prefix, String uri, Map<String, String> headers, String body, String httpCode) {
-    populateFromHeaders(HeaderExtractor.extractTraceHeaders(headers));
-    putInContext(prefix + RestLoggingConstant.URI, uri);
-    putInContext(prefix + RestLoggingConstant.HEADERS, HeaderExtractor.getHeadersAsString(headers));
-    putInContext(prefix + RestLoggingConstant.BODY, body);
-    putInContext(prefix + RestLoggingConstant.STATUS, httpCode);
-  }
 }

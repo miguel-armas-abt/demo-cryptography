@@ -5,6 +5,7 @@ import static com.demo.poc.commons.core.logging.utils.HeaderExtractor.extractTra
 
 import com.demo.poc.commons.core.errors.dto.ErrorDto;
 import com.demo.poc.commons.core.errors.exceptions.GenericException;
+import com.demo.poc.commons.core.errors.exceptions.RestClientException;
 import com.demo.poc.commons.core.logging.ThreadContextInjector;
 import com.demo.poc.commons.custom.properties.ApplicationProperties;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class ErrorInterceptor extends ResponseEntityExceptionHandler {
 
   private final ApplicationProperties properties;
+  private final ThreadContextInjector threadContextInjector;
 
   @ExceptionHandler({Throwable.class})
   public ResponseEntity<ErrorDto> handleException(Throwable ex, WebRequest request) {
@@ -41,6 +43,11 @@ public class ErrorInterceptor extends ResponseEntityExceptionHandler {
 
     if (ex instanceof ResourceAccessException || ex instanceof ConnectException) {
       httpStatus = HttpStatus.REQUEST_TIMEOUT;
+    }
+
+    if( ex instanceof RestClientException restClientException) {
+      error = restClientException.getErrorDetail();
+      httpStatus = HttpStatus.valueOf(restClientException.getHttpStatusCode().value());
     }
 
     if(ex instanceof GenericException genericException) {
@@ -83,9 +90,9 @@ public class ErrorInterceptor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
-  private static void generateTrace(Throwable exception, WebRequest request) {
+  private void generateTrace(Throwable exception, WebRequest request) {
     String message = exception.getMessage();
-    ThreadContextInjector.populateFromHeaders(extractTraceHeaders(request));
+    threadContextInjector.populateFromTraceHeaders(extractTraceHeaders(request));
 
     log.error(message, exception);
 

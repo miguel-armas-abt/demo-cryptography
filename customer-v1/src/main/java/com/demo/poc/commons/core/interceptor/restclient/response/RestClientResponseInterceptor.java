@@ -7,16 +7,16 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class RestClientResponseInterceptor implements ClientHttpRequestInterceptor {
+
+  private final ThreadContextInjector threadContextInjector;
 
   @Override
   public ClientHttpResponse intercept(HttpRequest request, byte[] body,
@@ -30,7 +30,7 @@ public class RestClientResponseInterceptor implements ClientHttpRequestIntercept
       BufferingClientHttpResponse bufferedResponse = new BufferingClientHttpResponse(response);
       String responseBody = StreamUtils.copyToString(bufferedResponse.getBody(), StandardCharsets.UTF_8);
 
-      ThreadContextInjector.populateFromRestClientResponse(
+      threadContextInjector.populateFromRestClientResponse(
           response.getHeaders().toSingleValueMap(),
           uri,
           responseBody,

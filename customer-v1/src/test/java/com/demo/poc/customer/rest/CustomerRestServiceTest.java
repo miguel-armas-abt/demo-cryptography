@@ -205,22 +205,22 @@ class CustomerRestServiceTest {
     }
 
     public static void mockCustomerService(CustomerService customerService) {
-      when(customerService.findByUniqueCode(anyLong()))
+      when(customerService.findByUniqueCode(anyMap(), anyLong()))
         .thenReturn(CUSTOMER_RESPONSE_DTO);
 
-      when(customerService.findByDocumentType(anyString()))
+      when(customerService.findByDocumentType(anyMap(), anyString()))
         .thenReturn(CUSTOMER_RESPONSE_DTO_LIST_BY_DOCUMENT_TYPE);
 
-      when(customerService.findByDocumentType(null))
+      when(customerService.findByDocumentType(anyMap(), null))
         .thenReturn(CUSTOMER_RESPONSE_DTO_LIST);
 
-      when(customerService.save(any(CustomerRequestDto.class)))
+      when(customerService.save(anyMap(), any(CustomerRequestDto.class)))
         .thenReturn(7L);
 
-      when(customerService.update(anyLong(), any(CustomerRequestDto.class)))
+      when(customerService.update(anyMap(), anyLong(), any(CustomerRequestDto.class)))
         .thenReturn(7L);
 
-      when(customerService.deleteByUniqueCode(anyLong()))
+      when(customerService.deleteByUniqueCode(anyMap(), anyLong()))
         .thenReturn(7L);
     }
   }

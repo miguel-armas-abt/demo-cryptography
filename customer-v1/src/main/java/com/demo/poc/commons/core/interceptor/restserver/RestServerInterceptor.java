@@ -12,19 +12,19 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
 @WebFilter(urlPatterns = "/*")
 @RequiredArgsConstructor
 public class RestServerInterceptor implements Filter {
 
   private static final List<String> EXCLUDED_PATHS = List.of("/h2-console", "/swagger-ui", "/actuator");
+
+  private final ThreadContextInjector threadContextInjector;
 
   @Override
   public void init(FilterConfig filterConfig) {
@@ -59,7 +59,7 @@ public class RestServerInterceptor implements Filter {
   }
 
   private void generateTraceOfRequest(HttpServletRequest request) {
-    ThreadContextInjector.populateFromRestServerRequest(
+    threadContextInjector.populateFromRestServerRequest(
         request.getMethod(),
         extractRequestURL(request),
         extractRequestHeadersAsMap(request),
@@ -67,7 +67,7 @@ public class RestServerInterceptor implements Filter {
   }
 
   private void generateTraceOfResponse(HttpServletResponse response, String uri, String responseBody) {
-    ThreadContextInjector.populateFromRestServerResponse(
+    threadContextInjector.populateFromRestServerResponse(
         ResponseLoggerUtil.extractResponseHeadersAsMap(response),
         uri,
         responseBody,

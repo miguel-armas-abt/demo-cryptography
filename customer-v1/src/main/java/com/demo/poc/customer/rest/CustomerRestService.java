@@ -1,12 +1,18 @@
 package com.demo.poc.customer.rest;
 
+import com.demo.poc.commons.core.restserver.utils.ServerHeaderExtractor;
+import com.demo.poc.commons.core.validations.headers.DefaultHeaders;
+import com.demo.poc.commons.core.validations.headers.HeaderValidator;
 import com.demo.poc.customer.dto.request.CustomerRequestDto;
 import com.demo.poc.customer.dto.response.CustomerResponseDto;
 import com.demo.poc.customer.service.CustomerService;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.function.LongFunction;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,41 +36,61 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class CustomerRestService {
 
   private final CustomerService service;
+  private final HeaderValidator headerValidator;
 
   @GetMapping(value = "/{uniqueCode}")
-  public ResponseEntity<CustomerResponseDto> findByUniqueCode(@PathVariable(name = "uniqueCode") Long uniqueCode) {
-    return ResponseEntity.ok(service.findByUniqueCode(uniqueCode));
+  public ResponseEntity<CustomerResponseDto> findByUniqueCode(HttpServletRequest servletRequest,
+                                                              @PathVariable(name = "uniqueCode") Long uniqueCode) {
+    Map<String, String> headers = ServerHeaderExtractor.extractHeadersAsMap(servletRequest);
+    headerValidator.validate(headers, DefaultHeaders.class);
+
+    return ResponseEntity.ok(service.findByUniqueCode(headers, uniqueCode));
   }
 
   @GetMapping
-  public ResponseEntity<List<CustomerResponseDto>> findByDocumentType(@RequestParam(value = "documentType", required = false) String documentType) {
+  public ResponseEntity<List<CustomerResponseDto>> findByDocumentType(HttpServletRequest servletRequest,
+                                                                      @RequestParam(value = "documentType", required = false) String documentType) {
+    Map<String, String> headers = ServerHeaderExtractor.extractHeadersAsMap(servletRequest);
+    headerValidator.validate(headers, DefaultHeaders.class);
 
-    List<CustomerResponseDto> customerResponseDtoList = service.findByDocumentType(documentType);
+    List<CustomerResponseDto> customerResponseDtoList = service.findByDocumentType(headers, documentType);
     return (customerResponseDtoList == null || customerResponseDtoList.isEmpty())
       ? ResponseEntity.noContent().build()
-      : ResponseEntity.ok(service.findByDocumentType(documentType));
+      : ResponseEntity.ok(service.findByDocumentType(headers, documentType));
   }
 
   @PostMapping
-  public ResponseEntity<Void> save(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
-    Long uniqueCode = service.save(customerRequestDto);
+  public ResponseEntity<Void> save(HttpServletRequest servletRequest,
+                                   @Valid @RequestBody CustomerRequestDto customerRequestDto) {
+    Map<String, String> headers = ServerHeaderExtractor.extractHeadersAsMap(servletRequest);
+    headerValidator.validate(headers, DefaultHeaders.class);
+
+    Long uniqueCode = service.save(headers, customerRequestDto);
     return ResponseEntity
       .created(buildPostUriLocation.apply(uniqueCode))
       .build();
   }
 
   @PutMapping(value = "/{uniqueCode}")
-  public ResponseEntity<Void> update(@Valid @RequestBody CustomerRequestDto customerRequestDto,
+  public ResponseEntity<Void> update(HttpServletRequest servletRequest,
+                                     @Valid @RequestBody CustomerRequestDto customerRequestDto,
                                      @PathVariable("uniqueCode") Long uniqueCode) {
-    uniqueCode = service.update(uniqueCode, customerRequestDto);
+    Map<String, String> headers = ServerHeaderExtractor.extractHeadersAsMap(servletRequest);
+    headerValidator.validate(headers, DefaultHeaders.class);
+
+    uniqueCode = service.update(headers, uniqueCode, customerRequestDto);
     return ResponseEntity
       .created(buildUriLocation.apply(uniqueCode))
       .build();
   }
 
   @DeleteMapping(value = "/{uniqueCode}")
-  public ResponseEntity<Void> delete(@PathVariable("uniqueCode") Long uniqueCode) {
-    uniqueCode = service.deleteByUniqueCode(uniqueCode);
+  public ResponseEntity<Void> delete(HttpServletRequest servletRequest,
+                                     @PathVariable("uniqueCode") Long uniqueCode) {
+    Map<String, String> headers = ServerHeaderExtractor.extractHeadersAsMap(servletRequest);
+    headerValidator.validate(headers, DefaultHeaders.class);
+
+    uniqueCode = service.deleteByUniqueCode(headers, uniqueCode);
     return ResponseEntity
       .noContent()
       .location(buildUriLocation.apply(uniqueCode))

@@ -4,6 +4,7 @@ import static com.demo.poc.customer.MockConstant.CIPHERED_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -19,6 +20,7 @@ import com.demo.poc.customer.repository.customer.entity.CustomerEntity;
 import com.demo.poc.customer.service.impl.CustomerServiceImpl;
 import com.google.gson.Gson;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -56,7 +58,7 @@ class CustomerServiceTest {
     String expectedJson = gson.toJson(CUSTOMER_RESPONSE_DTO_LIST);
 
     //Act
-    List<CustomerResponseDto> actual = customerService.findByDocumentType(null);
+    List<CustomerResponseDto> actual = customerService.findByDocumentType(Map.of(), null);
     String actualJson = gson.toJson(actual);
 
     //Assert
@@ -70,7 +72,7 @@ class CustomerServiceTest {
     String expected = gson.toJson(CUSTOMER_RESPONSE_DTO);
 
     //Act
-    CustomerResponseDto actual = customerService.findByUniqueCode(1L);
+    CustomerResponseDto actual = customerService.findByUniqueCode(Map.of(), 1L);
     String actualJson = gson.toJson(actual);
 
     //Assert
@@ -88,7 +90,7 @@ class CustomerServiceTest {
     String expectedJson = gson.toJson(expected);
 
     //Act
-    List<CustomerResponseDto> actual = customerService.findByDocumentType(DNI.name());
+    List<CustomerResponseDto> actual = customerService.findByDocumentType(Map.of(), DNI.name());
     String actualJson = gson.toJson(actual);
 
     //Assert
@@ -128,7 +130,7 @@ class CustomerServiceTest {
     public static CryptographyRepository mockCryptographyRepository() {
       CryptographyRepository repository = mock(CryptographyRepository.class);
 
-      when(repository.encrypt(anyString()))
+      when(repository.encrypt(anyMap(), anyString()))
           .thenReturn(CIPHERED_PASSWORD);
 
       return repository;
