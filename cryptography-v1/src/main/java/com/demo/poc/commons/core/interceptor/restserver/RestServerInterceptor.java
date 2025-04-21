@@ -1,41 +1,30 @@
 package com.demo.poc.commons.core.interceptor.restserver;
 
-import com.demo.poc.commons.core.logging.ThreadContextInjector;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import static com.demo.poc.commons.core.interceptor.restserver.RestServerInterceptor.RequestLoggerUtil.*;
+
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import com.demo.poc.commons.core.logging.ThreadContextInjector;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.demo.poc.commons.core.interceptor.restserver.RestServerInterceptor.RequestLoggerUtil.extractRequestBody;
-import static com.demo.poc.commons.core.interceptor.restserver.RestServerInterceptor.RequestLoggerUtil.extractRequestHeadersAsMap;
-import static com.demo.poc.commons.core.interceptor.restserver.RestServerInterceptor.RequestLoggerUtil.extractRequestURL;
-
 @Slf4j
-@Component
 @WebFilter(urlPatterns = "/*")
 @RequiredArgsConstructor
 public class RestServerInterceptor implements Filter {
+
+  private static final List<String> EXCLUDED_PATHS = List.of("/h2-console", "/swagger-ui", "/actuator");
+
+  private final ThreadContextInjector threadContextInjector;
 
   @Override
   public void init(FilterConfig filterConfig) {
@@ -44,6 +33,13 @@ public class RestServerInterceptor implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
     HttpServletRequest httpRequest = (HttpServletRequest) request;
+    HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+    String requestUri = httpRequest.getRequestURI();
+    if (EXCLUDED_PATHS.stream().anyMatch(requestUri::startsWith)) {
+      chain.doFilter(request, response);
+      return;
+    }
 
     BufferingHttpServletResponse bufferingResponse = new BufferingHttpServletResponse((HttpServletResponse) response);
     BufferingHttpServletRequest bufferingRequest = new BufferingHttpServletRequest(httpRequest);
@@ -53,9 +49,9 @@ public class RestServerInterceptor implements Filter {
     chain.doFilter(bufferingRequest, bufferingResponse);
     String responseBody = bufferingResponse.getCachedBody();
 
-    generateTraceOfResponse(bufferingResponse, responseBody);
+    generateTraceOfResponse(bufferingResponse, extractRequestURL(httpRequest), responseBody);
 
-    response.getOutputStream().write(responseBody.getBytes(StandardCharsets.UTF_8));
+    httpResponse.getOutputStream().write(responseBody.getBytes(StandardCharsets.UTF_8));
   }
 
   @Override
@@ -63,18 +59,28 @@ public class RestServerInterceptor implements Filter {
   }
 
   private void generateTraceOfRequest(HttpServletRequest request) {
-    ThreadContextInjector.populateFromRestServerRequest(
+    threadContextInjector.populateFromRestServerRequest(
         request.getMethod(),
         extractRequestURL(request),
         extractRequestHeadersAsMap(request),
         extractRequestBody(request));
   }
 
-  private void generateTraceOfResponse(HttpServletResponse response, String responseBody) {
-    ThreadContextInjector.populateFromRestServerResponse(
+  private void generateTraceOfResponse(HttpServletResponse response, String uri, String responseBody) {
+    threadContextInjector.populateFromRestServerResponse(
         ResponseLoggerUtil.extractResponseHeadersAsMap(response),
+        uri,
         responseBody,
         String.valueOf(response.getStatus()));
+  }
+
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static class ExclusionUtil {
+
+    public static void excludeUris(FilterChain chain, ServletRequest request,
+                                   ServletResponse response, String requestUri) throws IOException, ServletException {
+
+    }
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)

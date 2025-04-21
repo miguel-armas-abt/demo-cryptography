@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LoggingConstant {
+public class RestLoggingConstant {
 
   public static final String[] TRACE_HEADERS = {
     "traceId",

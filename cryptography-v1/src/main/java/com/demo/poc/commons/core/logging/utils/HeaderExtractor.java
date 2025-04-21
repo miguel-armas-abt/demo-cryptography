@@ -1,15 +1,15 @@
 package com.demo.poc.commons.core.logging.utils;
 
-import com.demo.poc.commons.core.logging.constants.LoggingConstant;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.springframework.web.context.request.WebRequest;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+
+import com.demo.poc.commons.core.logging.constants.RestLoggingConstant;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.springframework.web.context.request.WebRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HeaderExtractor {
@@ -21,11 +21,11 @@ public class HeaderExtractor {
   }
 
   public static Map<String, String> extractTraceHeaders(WebRequest request) {
-    return extractHeaders(request::getHeader, LoggingConstant.TRACE_HEADERS);
+    return extractHeaders(request::getHeader, RestLoggingConstant.TRACE_HEADERS);
   }
 
   public static Map<String, String> extractTraceHeaders(Map<String, String> headers) {
-    return extractHeaders(headers::get, LoggingConstant.TRACE_HEADERS);
+    return extractHeaders(headers::get, RestLoggingConstant.TRACE_HEADERS);
   }
 
   private static Map<String, String> extractHeaders(UnaryOperator<String> headerProvider, String[] headerNames) {
