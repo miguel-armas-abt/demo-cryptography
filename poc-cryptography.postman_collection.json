@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "973436fc-44a5-4703-b83b-02dcc2805de0",
-		"name": "poc-customer",
+		"_postman_id": "b8bd5df1-36ad-4450-95aa-d1c8cdd33579",
+		"name": "poc-cryptography",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13773998"
+		"_exporter_id": "33527392"
 	},
 	"item": [
 		{
@@ -13,7 +13,23 @@
 					"name": "Delete customer by unique code",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "timestamp",
+								"value": "{{$isoTimestamp}}",
+								"type": "text"
+							},
+							{
+								"key": "trace-id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "channel-id",
+								"value": "APP",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -24,15 +40,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8093/poc/customer/v1/customers/1",
+							"raw": "http://localhost:8093/ibk/v1/customers/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8093",
 							"path": [
-								"poc",
-								"customer",
+								"ibk",
 								"v1",
 								"customers",
 								"1"
@@ -45,7 +60,23 @@
 					"name": "Update customer by unique code",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "timestamp",
+								"value": "{{$isoTimestamp}}",
+								"type": "text"
+							},
+							{
+								"key": "trace-id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "channel-id",
+								"value": "APP",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"names\": \"Sam\",\r\n    \"lastNames\": \"Altman\",\r\n    \"documentType\": \"DNI\",\r\n    \"documentNumber\": 76517376,\r\n    \"active\": false,\r\n    \"password\": \"Aa111111\"\r\n}",
@@ -56,15 +87,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8093/poc/customer/v1/customers/1",
+							"raw": "http://localhost:8093/ibk/v1/customers/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8093",
 							"path": [
-								"poc",
-								"customer",
+								"ibk",
 								"v1",
 								"customers",
 								"1"
@@ -77,7 +107,23 @@
 					"name": "Save customer",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "timestamp",
+								"value": "{{$isoTimestamp}}",
+								"type": "text"
+							},
+							{
+								"key": "trace-id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "channel-id",
+								"value": "APP",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"uniqueCode\": 10,\r\n    \"names\": \"Sam\",\r\n    \"lastNames\": \"Altman\",\r\n    \"documentType\": \"DNI\",\r\n    \"documentNumber\": 76517376,\r\n    \"active\": true,\r\n    \"password\": \"Aa111111\"\r\n}",
@@ -88,15 +134,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8093/poc/customer/v1/customers",
+							"raw": "http://localhost:8093/ibk/v1/customers",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8093",
 							"path": [
-								"poc",
-								"customer",
+								"ibk",
 								"v1",
 								"customers"
 							]
@@ -110,21 +155,30 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "traceId",
+								"key": "timestamp",
+								"value": "{{$isoTimestamp}}",
+								"type": "text"
+							},
+							{
+								"key": "trace-id",
 								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "channel-id",
+								"value": "APP",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8093/poc/customer/v1/customers",
+							"raw": "http://localhost:8093/ibk/v1/customers",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8093",
 							"path": [
-								"poc",
-								"customer",
+								"ibk",
 								"v1",
 								"customers"
 							],
@@ -152,6 +206,21 @@
 						},
 						"method": "POST",
 						"header": [
+							{
+								"key": "timestamp",
+								"value": "{{$isoTimestamp}}",
+								"type": "text"
+							},
+							{
+								"key": "trace-id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "channel-id",
+								"value": "APP",
+								"type": "text"
+							},
 							{
 								"key": "encryptionMethod",
 								"value": "AES",
@@ -199,6 +268,21 @@
 						"method": "POST",
 						"header": [
 							{
+								"key": "timestamp",
+								"value": "{{$isoTimestamp}}",
+								"type": "text"
+							},
+							{
+								"key": "trace-id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "channel-id",
+								"value": "APP",
+								"type": "text"
+							},
+							{
 								"key": "encryptionMethod",
 								"value": "AES",
 								"type": "text"
@@ -211,7 +295,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cipherMessage\": \"AAAADCOGFTcRQPfkou5KUKvTS7dTnjGuIvq5ZuLjI8kTsTLcPk26Hw==\"\r\n}",
+							"raw": "{\r\n    \"cipherMessage\": \"AmYhZLE2gBuY3BdkkBgn8OEKyyJbly3o878bzEL1IdNMRVPSjim4BEi7LeGJdR6DcxQrcedF75ojdPdWfn/gg+GpKueF6PhE4wzSx/w37nUHFi5BMGZOh2b1scnfh0Rxqa86jmo+wW7zTuBoXVrxtWapF4foFwE3wL0N4basfZHC7qk30ASpwSHL/IFkIsEA/XfdF1jwA1NHqSDdqhMpKtmT95bhGRrN9aRWII4XCxK+Cs41FiurjIBT+dq6eN1MWPTTuSI+9UsA0jyJK8jDyVUYQqobv+SF3YVFCPjcLfymGm6guyB9WauPvt2uD2rVcG1J4bobdcJfpbj1qNkIbeIfn2PsfjD3b5z4DhY187Pumu0tP5iD8KStGr4Q+46oCncJ45I85Ni5KgTeevd8UiSHrFmliSMiWwL0BLnaA4792HBizQSTm3Q1wBUuJdJhB11QqlKp2tz2c94wx50nlMhtI0SEUhamc0z+eCE8npkecYxaWw1FRgMwAz6FQjO3dCEZqzHSknynwkbgPgxXiLFavDs35eNDQGJ1J03ecO6JowDLVr/laYdxGgWHYPfwJDtyAqAgG5e902vJYrtp+atkg4qsoEocG73Bo9rRpc5lIY9PWo0U2LSsgub3YedqkOsG8djIxKmsBImX5/mXsEfQElHSs+YR3GoqMzbgrO0=\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
