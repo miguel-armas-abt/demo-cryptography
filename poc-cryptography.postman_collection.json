@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b8bd5df1-36ad-4450-95aa-d1c8cdd33579",
+		"_postman_id": "4f36b54d-ecc5-4dfb-813e-037dc72e9490",
 		"name": "poc-cryptography",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33527392"
+		"_exporter_id": "13773998"
 	},
 	"item": [
 		{
@@ -222,8 +222,8 @@
 								"type": "text"
 							},
 							{
-								"key": "encryptionMethod",
-								"value": "AES",
+								"key": "encryption-method",
+								"value": "RSA",
 								"type": "text"
 							},
 							{
@@ -283,8 +283,8 @@
 								"type": "text"
 							},
 							{
-								"key": "encryptionMethod",
-								"value": "AES",
+								"key": "encryption-method",
+								"value": "RSA",
 								"type": "text"
 							},
 							{
@@ -295,7 +295,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cipherMessage\": \"AmYhZLE2gBuY3BdkkBgn8OEKyyJbly3o878bzEL1IdNMRVPSjim4BEi7LeGJdR6DcxQrcedF75ojdPdWfn/gg+GpKueF6PhE4wzSx/w37nUHFi5BMGZOh2b1scnfh0Rxqa86jmo+wW7zTuBoXVrxtWapF4foFwE3wL0N4basfZHC7qk30ASpwSHL/IFkIsEA/XfdF1jwA1NHqSDdqhMpKtmT95bhGRrN9aRWII4XCxK+Cs41FiurjIBT+dq6eN1MWPTTuSI+9UsA0jyJK8jDyVUYQqobv+SF3YVFCPjcLfymGm6guyB9WauPvt2uD2rVcG1J4bobdcJfpbj1qNkIbeIfn2PsfjD3b5z4DhY187Pumu0tP5iD8KStGr4Q+46oCncJ45I85Ni5KgTeevd8UiSHrFmliSMiWwL0BLnaA4792HBizQSTm3Q1wBUuJdJhB11QqlKp2tz2c94wx50nlMhtI0SEUhamc0z+eCE8npkecYxaWw1FRgMwAz6FQjO3dCEZqzHSknynwkbgPgxXiLFavDs35eNDQGJ1J03ecO6JowDLVr/laYdxGgWHYPfwJDtyAqAgG5e902vJYrtp+atkg4qsoEocG73Bo9rRpc5lIY9PWo0U2LSsgub3YedqkOsG8djIxKmsBImX5/mXsEfQElHSs+YR3GoqMzbgrO0=\"\r\n}",
+							"raw": "{\r\n    \"cipherMessage\": \"C4/V+xQUTDDitpgq0ijEupadklVQ6x5NKjoFIjutGu9jg2E1Ka0+b2G4WC0OEXAVc/eUt902L+aGGRejZ3Wc20oBB5WkV1oDJO+F+iatOktVxOclQ2JND4x9QJnEzso42KMRhoFPuX5kZpjt+yRfQYLBTD4iJP7fmbKR3LLuIh+lzzHEPVhZ0yBZRJpurJpPTq2CDHKy/LSlKwR6P3LkIjs+qsJ1ALe86FMRI3Ig3H2bFLn6lcZeKiMT0c0ukwUUeb1OpaYHlPVUHC7MLza1PUerLStaYQdH8TiLu//P737bB08/XZ3v4w3FKF/egaYRdVoKzLwhgb0iZzZuZEsEzTaNRdWI+JnkHI8NxV9Js/JAV3TlNSO8AQ6ziVLjWdftCcd0CP5pJwTh5hT2u9af6XCNIhJ0f9JMEmnvsfD29chdIzLxJIqbioc1vHAfgVChS3mfOYuSqoAtMKJJC0bGz4YU8FYFBEmYpHpvg/82XDcKUOpVyPFAOVpy3Qi73Zd9AXS8+IW0KKaOuXGviSHbol0oWyrQJUlQVWbjhIY01mza54FKi0zjAk4iOKX36tdLiLczcrY0vrVJOC9irQrV72Dr8Ja82CgTPtJEXWKxJ2GM6kMH21FidSOkBIetYlvDOSeibFgsIo5CvrI6/K7oqEkY9ePw2GOXNKhtoLdz+PE=\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
