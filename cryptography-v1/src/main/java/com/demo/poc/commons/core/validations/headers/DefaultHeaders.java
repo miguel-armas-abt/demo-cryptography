@@ -7,12 +7,10 @@ import com.demo.poc.commons.core.validations.utils.ParamName;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @Setter
 @Getter
 @NoArgsConstructor
