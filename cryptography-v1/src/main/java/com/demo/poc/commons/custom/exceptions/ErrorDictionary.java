@@ -3,9 +3,9 @@ package com.demo.poc.commons.custom.exceptions;
 import com.demo.poc.commons.core.errors.exceptions.GenericException;
 import com.demo.poc.commons.core.errors.exceptions.InvalidFieldException;
 import com.demo.poc.commons.core.errors.exceptions.NoSuchCacheConfigException;
+import com.demo.poc.commons.core.errors.exceptions.NoSuchParamMapperException;
 import com.demo.poc.commons.core.errors.exceptions.NoSuchRestClientException;
-import com.demo.poc.commons.core.errors.exceptions.ReflectiveParamAssignmentException;
-import com.demo.poc.commons.core.errors.exceptions.ReflectiveParamMappingException;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,14 +19,13 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RequiredArgsConstructor
 public enum ErrorDictionary {
 
-    //system=00
+    //system=02.00.xx
     INVALID_FIELD("02.00.01", "Invalid field", BAD_REQUEST, InvalidFieldException.class),
     NO_SUCH_REST_CLIENT("02.00.02", "No such rest client", INTERNAL_SERVER_ERROR, NoSuchRestClientException.class),
     NO_SUCH_CACHE_CONFIG("02.00.03", "No such cache config", INTERNAL_SERVER_ERROR, NoSuchCacheConfigException.class),
-    ERROR_MAPPING_REFLECTIVE_PARAMS("02.00.04", "Error mapping reflective params", INTERNAL_SERVER_ERROR, ReflectiveParamMappingException.class),
-    ERROR_ASSIGN_REFLECTIVE_PARAMS("02.00.05", "Error assign reflective params", INTERNAL_SERVER_ERROR, ReflectiveParamAssignmentException.class),
+    NO_SUCH_PARAM_MAPPER("02.00.04", "No such param mapper", BAD_REQUEST, NoSuchParamMapperException.class),
 
-    //custom=01
+    //cryptography=02.01.xx
     NO_SUCH_ENCRYPTION_METHOD("02.01.01", "No such encryption method", INTERNAL_SERVER_ERROR, NoSuchEncryptionMethodException.class),
     AES_NO_SUCH_KEY("02.01.02", "No such AES key", INTERNAL_SERVER_ERROR, AesNoSuchKeyException.class),
     AES_UNEXPECTED_ENCRYPTION("02.01.03", "Unexpected AES encryption error", INTERNAL_SERVER_ERROR, AesUnexpectedEncryptionException.class),

@@ -7,6 +7,6 @@ import lombok.Getter;
 public class InvalidFieldException extends GenericException {
 
     public InvalidFieldException(String message) {
-        super(message, ErrorDictionary.parse(InvalidFieldException.class));
+        super(ErrorDictionary.INVALID_FIELD.getMessage() + ": " + message, ErrorDictionary.parse(InvalidFieldException.class));
     }
 }

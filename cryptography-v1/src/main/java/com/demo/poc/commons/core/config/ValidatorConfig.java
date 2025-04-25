@@ -1,8 +1,11 @@
 package com.demo.poc.commons.core.config;
 
-import com.demo.poc.commons.core.validations.body.BodyValidator;
-import com.demo.poc.commons.core.validations.headers.HeaderValidator;
-import com.demo.poc.commons.core.validations.params.ParamValidator;
+import java.util.List;
+
+import com.demo.poc.commons.core.validations.BodyValidator;
+import com.demo.poc.commons.core.validations.ParamMapper;
+import com.demo.poc.commons.core.validations.ParamValidator;
+import com.demo.poc.commons.core.validations.headers.DefaultHeadersMapper;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,12 +20,12 @@ public class ValidatorConfig {
   }
 
   @Bean
-  public HeaderValidator headerValidator(BodyValidator bodyValidator) {
-    return new HeaderValidator(bodyValidator);
+  public DefaultHeadersMapper defaultHeadersMapper() {
+    return new DefaultHeadersMapper();
   }
 
   @Bean
-  public ParamValidator paramValidator(BodyValidator bodyValidator) {
-    return new ParamValidator(bodyValidator);
+  public ParamValidator paramValidator(List<ParamMapper> mappers, BodyValidator bodyValidator) {
+    return new ParamValidator(mappers, bodyValidator);
   }
 }

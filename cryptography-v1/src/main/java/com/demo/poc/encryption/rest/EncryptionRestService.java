@@ -1,8 +1,8 @@
 package com.demo.poc.encryption.rest;
 
-import com.demo.poc.commons.core.restserver.utils.ServerHeaderExtractor;
-import com.demo.poc.commons.core.validations.headers.HeaderValidator;
-import com.demo.poc.encryption.dto.params.EncryptionParam;
+import com.demo.poc.commons.core.restserver.utils.RestServerUtils;
+import com.demo.poc.commons.core.validations.ParamValidator;
+import com.demo.poc.encryption.params.EncryptionHeader;
 import com.demo.poc.encryption.dto.request.DecryptionRequestDto;
 import com.demo.poc.encryption.dto.request.EncryptionRequestDto;
 import com.demo.poc.encryption.dto.response.DecryptionResponseDto;
@@ -29,13 +29,13 @@ import java.util.Map;
 public class EncryptionRestService {
 
   private final EncryptionService service;
-  private final HeaderValidator headerValidator;
+  private final ParamValidator paramValidator;
 
   @PostMapping("encrypt")
   public ResponseEntity<EncryptionResponseDto> encrypt(HttpServletRequest servletRequest,
                                                        @Valid @RequestBody EncryptionRequestDto encryptionRequest) {
-    Map<String, String> headers = ServerHeaderExtractor.extractHeadersAsMap(servletRequest);
-    EncryptionParam params = headerValidator.validateAndRetrieve(headers, EncryptionParam.class);
+    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
+    EncryptionHeader params = paramValidator.validateAndGet(headers, EncryptionHeader.class);
 
     EncryptionMethod method = EncryptionMethod.parse(params.getEncryptionMethod());
     return ResponseEntity.ok(service.encrypt(method, params.getFeature(), encryptionRequest.getValue()));
@@ -44,8 +44,8 @@ public class EncryptionRestService {
   @PostMapping("decrypt")
   public ResponseEntity<DecryptionResponseDto> decrypt(HttpServletRequest servletRequest,
                                                        @Valid @RequestBody DecryptionRequestDto decryptionRequest) {
-    Map<String, String> headers = ServerHeaderExtractor.extractHeadersAsMap(servletRequest);
-    EncryptionParam params = headerValidator.validateAndRetrieve(headers, EncryptionParam.class);
+    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
+    EncryptionHeader params = paramValidator.validateAndGet(headers, EncryptionHeader.class);
 
     EncryptionMethod method = EncryptionMethod.parse(params.getEncryptionMethod());
     return ResponseEntity.ok(service.decrypt(method, params.getFeature(), decryptionRequest.getCipherMessage()));
