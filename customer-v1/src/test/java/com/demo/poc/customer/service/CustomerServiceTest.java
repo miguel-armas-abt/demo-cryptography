@@ -9,8 +9,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static com.demo.poc.customer.enums.DocumentType.DNI;
-import static com.demo.poc.customer.JsonFileReader.readListFromFile;
-import static com.demo.poc.customer.JsonFileReader.readObjectFromFile;
+import static com.demo.poc.JsonFileReader.readListFromFile;
+import static com.demo.poc.JsonFileReader.readObjectFromFile;
 
 import com.demo.poc.customer.dto.response.CustomerResponseDto;
 import com.demo.poc.customer.mapper.CustomerMapper;

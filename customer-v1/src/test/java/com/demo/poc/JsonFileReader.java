@@ -1,4 +1,4 @@
-package com.demo.poc.customer;
+package com.demo.poc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

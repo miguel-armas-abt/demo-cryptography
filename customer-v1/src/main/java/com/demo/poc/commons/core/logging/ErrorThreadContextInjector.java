@@ -16,10 +16,10 @@ public class ErrorThreadContextInjector {
   private final ThreadContextInjector injector;
 
   public void populateFromException(Throwable ex, WebRequest request) {
+    ThreadContext.clearAll();
     String traceParent = request.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase());
     Map<String, String> traceHeaders = TraceParam.Util.getTraceHeadersAsMap(traceParent);
     injector.populateFromHeaders(traceHeaders);
     log.error(ex.getMessage(), ex);
-    ThreadContext.clearAll();
   }
 }

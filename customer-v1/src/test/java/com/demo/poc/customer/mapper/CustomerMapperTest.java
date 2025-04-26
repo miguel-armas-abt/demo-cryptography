@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.demo.poc.customer.dto.response.CustomerResponseDto;
 import com.demo.poc.customer.dto.request.CustomerRequestDto;
 import com.demo.poc.customer.repository.customer.entity.CustomerEntity;
-import com.demo.poc.customer.JsonFileReader;
+import com.demo.poc.JsonFileReader;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

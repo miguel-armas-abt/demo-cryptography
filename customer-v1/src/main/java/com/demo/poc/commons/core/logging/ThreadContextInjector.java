@@ -28,21 +28,25 @@ public class ThreadContextInjector {
   }
 
   public void populateFromRestRequest(LoggingType loggingType, RestRequestLog restRequestLog) {
+    ThreadContext.clearAll();
     Map<String, String> traceHeaders = TraceParam.Util.getTraceHeadersAsMap(restRequestLog.getTraceParent());
     populateFromHeaders(traceHeaders);
     putInContext(loggingType.getCode() + RestConstants.METHOD, restRequestLog.getMethod());
     putInContext(loggingType.getCode() + RestConstants.URI, restRequestLog.getUri());
     putInContext(loggingType.getCode() + RestConstants.HEADERS, Utils.getHeadersAsString(restRequestLog.getRequestHeaders()));
     putInContext(loggingType.getCode() + RestConstants.BODY, restRequestLog.getRequestBody());
+    log.info(loggingType.getMessage());
   }
 
   public void populateFromRestResponse(LoggingType loggingType, RestResponseLog restResponseLog) {
+    ThreadContext.clearAll();
     Map<String, String> traceHeaders = TraceParam.Util.getTraceHeadersAsMap(restResponseLog.getTraceParent());
     populateFromHeaders(traceHeaders);
     putInContext(loggingType.getCode() + RestConstants.HEADERS, Utils.getHeadersAsString(restResponseLog.getResponseHeaders()));
     putInContext(loggingType.getCode() + RestConstants.URI, restResponseLog.getUri());
     putInContext(loggingType.getCode() + RestConstants.BODY, restResponseLog.getResponseBody());
     putInContext(loggingType.getCode() + RestConstants.STATUS, restResponseLog.getHttpCode());
+    log.info(loggingType.getMessage());
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
