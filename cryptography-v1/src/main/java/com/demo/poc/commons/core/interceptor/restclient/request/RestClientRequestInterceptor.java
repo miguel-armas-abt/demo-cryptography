@@ -1,7 +1,8 @@
 package com.demo.poc.commons.core.interceptor.restclient.request;
 
-import com.demo.poc.commons.core.logging.RestClientThreadContextInjector;
+import com.demo.poc.commons.core.logging.ThreadContextInjector;
 import com.demo.poc.commons.core.logging.dto.RestRequestLog;
+import com.demo.poc.commons.core.logging.enums.LoggingType;
 import com.demo.poc.commons.core.tracing.enums.TraceParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class RestClientRequestInterceptor implements ClientHttpRequestInterceptor {
 
-  private final RestClientThreadContextInjector restClientContext;
+  private final ThreadContextInjector contextInjector;
 
   @Override
   public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
@@ -34,6 +35,6 @@ public class RestClientRequestInterceptor implements ClientHttpRequestIntercepto
         .traceParent(request.getHeaders().getFirst(TraceParam.TRACE_PARENT.getKey()))
         .build();
 
-    restClientContext.populateRequest(log);
+    contextInjector.populateFromRestRequest(LoggingType.REST_CLIENT_REQ, log);
   }
 }

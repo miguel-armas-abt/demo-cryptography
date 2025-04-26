@@ -3,9 +3,10 @@ package com.demo.poc.commons.core.interceptor.restserver;
 import static com.demo.poc.commons.core.interceptor.restserver.RestServerInterceptor.RequestUtil.*;
 
 import com.demo.poc.commons.core.constants.Symbol;
-import com.demo.poc.commons.core.logging.RestServerThreadContextInjector;
+import com.demo.poc.commons.core.logging.ThreadContextInjector;
 import com.demo.poc.commons.core.logging.dto.RestRequestLog;
 import com.demo.poc.commons.core.logging.dto.RestResponseLog;
+import com.demo.poc.commons.core.logging.enums.LoggingType;
 import com.demo.poc.commons.core.tracing.enums.TraceParam;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -28,7 +29,7 @@ public class RestServerInterceptor implements Filter {
 
   private static final List<String> EXCLUDED_PATHS = List.of("/h2-console", "/swagger-ui", "/actuator");
 
-  private final RestServerThreadContextInjector restServerContext;
+  private final ThreadContextInjector contextInjector;
 
   @Override
   public void init(FilterConfig filterConfig) {
@@ -71,7 +72,7 @@ public class RestServerInterceptor implements Filter {
         .traceParent(request.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase()))
         .build();
 
-    restServerContext.populateFromRestServerRequest(log);
+    contextInjector.populateFromRestRequest(LoggingType.REST_SERVER_REQ, log);
   }
 
   private void generateTraceOfResponse(HttpServletRequest httpRequest, HttpServletResponse response, String responseBody) {
@@ -82,7 +83,7 @@ public class RestServerInterceptor implements Filter {
         .httpCode(String.valueOf(response.getStatus()))
         .traceParent(httpRequest.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase()))
         .build();
-    restServerContext.populateFromRestServerResponse(log);
+    contextInjector.populateFromRestResponse(LoggingType.REST_SERVER_RES, log);
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)

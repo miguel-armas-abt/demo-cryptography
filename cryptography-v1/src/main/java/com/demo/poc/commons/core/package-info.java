@@ -8,6 +8,7 @@
  *   <li>Last updated: 25/04</>
  *   <li>Refactor of param mappers.</>
  *   <li>Refactor of tracing.</>
+ *   <li>Add unit tests.</>
  * </ul>
  */
 package com.demo.poc.commons.core;
