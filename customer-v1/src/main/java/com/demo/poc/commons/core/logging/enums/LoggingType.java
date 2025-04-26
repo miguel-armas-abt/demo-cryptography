@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum LoggingType {
 
+  ERROR("error", "Error"),
   REST_SERVER_REQ("rest.server.req", "REST server request"),
   REST_SERVER_RES("rest.server.res", "REST server response"),
   REST_CLIENT_REQ("rest.client.req", "REST client request"),

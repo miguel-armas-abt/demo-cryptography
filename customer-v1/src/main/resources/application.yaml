@@ -41,6 +41,12 @@ configuration:
           provided:
             encryptionMethod: ${CRYPTOGRAPHY_V1_HEADER_ENCRYPTION_METHOD:AES}
             feature: ${CRYPTOGRAPHY_V1_HEADER_FEATURE:customers}
+          forwarded:
+            channelId: channelId
+          auto-generated:
+            timestamp: TIMESTAMP
+          tracing:
+            traceParent: TRACE_PARENT
       performance:
         timeout: GOOD
         concurrency: MEDIUM

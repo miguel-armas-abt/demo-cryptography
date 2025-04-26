@@ -1,12 +1,16 @@
 package com.demo.poc.commons.core.interceptor.restserver;
 
-import static com.demo.poc.commons.core.interceptor.restserver.RestServerInterceptor.RequestLoggerUtil.*;
+import static com.demo.poc.commons.core.interceptor.restserver.RestServerInterceptor.RequestUtil.*;
 
+import com.demo.poc.commons.core.constants.Symbol;
+import com.demo.poc.commons.core.logging.RestServerThreadContextInjector;
+import com.demo.poc.commons.core.logging.dto.RestRequestLog;
+import com.demo.poc.commons.core.logging.dto.RestResponseLog;
+import com.demo.poc.commons.core.tracing.enums.TraceParam;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.demo.poc.commons.core.logging.ThreadContextInjector;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +28,7 @@ public class RestServerInterceptor implements Filter {
 
   private static final List<String> EXCLUDED_PATHS = List.of("/h2-console", "/swagger-ui", "/actuator");
 
-  private final ThreadContextInjector threadContextInjector;
+  private final RestServerThreadContextInjector restServerContext;
 
   @Override
   public void init(FilterConfig filterConfig) {
@@ -49,7 +53,7 @@ public class RestServerInterceptor implements Filter {
     chain.doFilter(bufferingRequest, bufferingResponse);
     String responseBody = bufferingResponse.getCachedBody();
 
-    generateTraceOfResponse(bufferingResponse, extractRequestURL(httpRequest), responseBody);
+    generateTraceOfResponse(httpRequest, bufferingResponse, responseBody);
 
     httpResponse.getOutputStream().write(responseBody.getBytes(StandardCharsets.UTF_8));
   }
@@ -59,32 +63,30 @@ public class RestServerInterceptor implements Filter {
   }
 
   private void generateTraceOfRequest(HttpServletRequest request) {
-    threadContextInjector.populateFromRestServerRequest(
-        request.getMethod(),
-        extractRequestURL(request),
-        extractRequestHeadersAsMap(request),
-        extractRequestBody(request));
+    RestRequestLog log = RestRequestLog.builder()
+        .uri(extractRequestURL(request))
+        .requestBody(extractRequestBody(request))
+        .requestHeaders(extractRequestHeadersAsMap(request))
+        .method(request.getMethod())
+        .traceParent(request.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase()))
+        .build();
+
+    restServerContext.populateFromRestServerRequest(log);
   }
 
-  private void generateTraceOfResponse(HttpServletResponse response, String uri, String responseBody) {
-    threadContextInjector.populateFromRestServerResponse(
-        ResponseLoggerUtil.extractResponseHeadersAsMap(response),
-        uri,
-        responseBody,
-        String.valueOf(response.getStatus()));
+  private void generateTraceOfResponse(HttpServletRequest httpRequest, HttpServletResponse response, String responseBody) {
+    RestResponseLog log = RestResponseLog.builder()
+        .uri(extractRequestURL(httpRequest))
+        .responseBody(responseBody)
+        .responseHeaders(ResponseUtil.extractResponseHeadersAsMap(response))
+        .httpCode(String.valueOf(response.getStatus()))
+        .traceParent(httpRequest.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase()))
+        .build();
+    restServerContext.populateFromRestServerResponse(log);
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class ExclusionUtil {
-
-    public static void excludeUris(FilterChain chain, ServletRequest request,
-                                   ServletResponse response, String requestUri) throws IOException, ServletException {
-
-    }
-  }
-
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class RequestLoggerUtil {
+  public static class RequestUtil {
     public static Map<String, String> extractRequestHeadersAsMap(HttpServletRequest request) {
       return Optional.ofNullable(request.getHeaderNames())
           .map(Collections::list)
@@ -97,7 +99,7 @@ public class RestServerInterceptor implements Filter {
       try {
         return new BufferingHttpServletRequest(request).getRequestBody();
       } catch (IOException exception) {
-        log.error("Error reading request body: {}", exception.getClass(), exception);
+        log.error("Request body error: {}", exception.getClass(), exception);
         return StringUtils.EMPTY;
       }
     }
@@ -110,14 +112,14 @@ public class RestServerInterceptor implements Filter {
 
       String queryString = request.getQueryString();
       if (StringUtils.isNotBlank(queryString))
-        url += "?" + queryString;
+        url += Symbol.QUESTION_MARK + queryString;
 
       return url;
     }
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  private static class ResponseLoggerUtil {
+  private static class ResponseUtil {
 
     public static Map<String, String> extractResponseHeadersAsMap(HttpServletResponse response) {
       Map<String, String> headers = new HashMap<>();

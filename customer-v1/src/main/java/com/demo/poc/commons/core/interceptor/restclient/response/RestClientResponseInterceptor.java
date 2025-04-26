@@ -1,6 +1,8 @@
 package com.demo.poc.commons.core.interceptor.restclient.response;
 
-import com.demo.poc.commons.core.logging.ThreadContextInjector;
+import com.demo.poc.commons.core.logging.RestClientThreadContextInjector;
+import com.demo.poc.commons.core.logging.dto.RestResponseLog;
+import com.demo.poc.commons.core.tracing.enums.TraceParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
@@ -16,38 +18,34 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class RestClientResponseInterceptor implements ClientHttpRequestInterceptor {
 
-  private final ThreadContextInjector threadContextInjector;
+  private final RestClientThreadContextInjector restClientContext;
 
   @Override
   public ClientHttpResponse intercept(HttpRequest request, byte[] body,
                                       ClientHttpRequestExecution execution) throws IOException {
     ClientHttpResponse response = execution.execute(request, body);
-    return generateTrace(response, request.getURI().toString());
+    return generateTrace(request, response);
   }
 
-  private ClientHttpResponse generateTrace(ClientHttpResponse response, String uri) {
+  private ClientHttpResponse generateTrace(HttpRequest request, ClientHttpResponse response) {
     try {
       BufferingClientHttpResponse bufferedResponse = new BufferingClientHttpResponse(response);
       String responseBody = StreamUtils.copyToString(bufferedResponse.getBody(), StandardCharsets.UTF_8);
 
-      threadContextInjector.populateFromRestClientResponse(
-          response.getHeaders().toSingleValueMap(),
-          uri,
-          responseBody,
-          getHttpCode(response));
+      RestResponseLog log = RestResponseLog.builder()
+          .responseHeaders(response.getHeaders().toSingleValueMap())
+          .uri(request.getURI().toString())
+          .responseBody(responseBody)
+          .httpCode(String.valueOf(response.getStatusCode().value()))
+          .traceParent(request.getHeaders().getFirst(TraceParam.TRACE_PARENT.getKey()))
+          .build();
+
+      restClientContext.populateResponse(log);
       return bufferedResponse;
 
-    } catch (Exception exception) {
-      log.error("Error reading response body: {}", exception.getClass(), exception);
+    } catch (IOException exception) {
+      log.error("Response body error: {}", exception.getClass(), exception);
     }
     return response;
-  }
-
-  private static String getHttpCode(ClientHttpResponse response) throws IOException {
-    try {
-      return response.getStatusCode().toString();
-    } catch (IOException ex) {
-      return String.valueOf(response.getStatusCode());
-    }
   }
 }

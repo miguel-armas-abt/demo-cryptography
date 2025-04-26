@@ -1,16 +1,14 @@
 package com.demo.poc.commons.core.interceptor.error;
 
 import static com.demo.poc.commons.custom.exceptions.ErrorDictionary.INVALID_FIELD;
-import static com.demo.poc.commons.core.logging.utils.HeaderExtractor.extractTraceHeaders;
 
 import com.demo.poc.commons.core.errors.dto.ErrorDto;
 import com.demo.poc.commons.core.errors.exceptions.GenericException;
 import com.demo.poc.commons.core.errors.exceptions.RestClientException;
-import com.demo.poc.commons.core.logging.ThreadContextInjector;
+import com.demo.poc.commons.core.logging.ErrorThreadContextInjector;
 import com.demo.poc.commons.custom.properties.ApplicationProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.ThreadContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -32,7 +30,7 @@ import java.util.stream.Collectors;
 public class ErrorInterceptor extends ResponseEntityExceptionHandler {
 
   private final ApplicationProperties properties;
-  private final ThreadContextInjector threadContextInjector;
+  private final ErrorThreadContextInjector errorContext;
 
   @ExceptionHandler({Throwable.class})
   public ResponseEntity<ErrorDto> handleException(Throwable ex, WebRequest request) {
@@ -90,12 +88,7 @@ public class ErrorInterceptor extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
-  private void generateTrace(Throwable exception, WebRequest request) {
-    String message = exception.getMessage();
-    threadContextInjector.populateFromTraceHeaders(extractTraceHeaders(request));
-
-    log.error(message, exception);
-
-    ThreadContext.clearAll();
+  private void generateTrace(Throwable ex, WebRequest request) {
+    errorContext.populateFromException(ex, request);
   }
 }

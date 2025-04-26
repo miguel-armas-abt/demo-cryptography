@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "4f36b54d-ecc5-4dfb-813e-037dc72e9490",
+		"_postman_id": "b8bd5df1-36ad-4450-95aa-d1c8cdd33579",
 		"name": "poc-cryptography",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13773998"
+		"_exporter_id": "33527392"
 	},
 	"item": [
 		{
@@ -20,12 +20,12 @@
 								"type": "text"
 							},
 							{
-								"key": "trace-id",
-								"value": "{{$guid}}",
+								"key": "traceParent",
+								"value": "{{traceParent}}",
 								"type": "text"
 							},
 							{
-								"key": "channel-id",
+								"key": "channelId",
 								"value": "APP",
 								"type": "text"
 							}
@@ -67,12 +67,12 @@
 								"type": "text"
 							},
 							{
-								"key": "trace-id",
-								"value": "{{$guid}}",
+								"key": "traceParent",
+								"value": "{{traceParent}}",
 								"type": "text"
 							},
 							{
-								"key": "channel-id",
+								"key": "channelId",
 								"value": "APP",
 								"type": "text"
 							}
@@ -114,12 +114,12 @@
 								"type": "text"
 							},
 							{
-								"key": "trace-id",
-								"value": "{{$guid}}",
+								"key": "traceParent",
+								"value": "{{traceParent}}",
 								"type": "text"
 							},
 							{
-								"key": "channel-id",
+								"key": "channelId",
 								"value": "APP",
 								"type": "text"
 							}
@@ -160,12 +160,12 @@
 								"type": "text"
 							},
 							{
-								"key": "trace-id",
-								"value": "{{$guid}}",
+								"key": "traceParent",
+								"value": "{{traceParent}}",
 								"type": "text"
 							},
 							{
-								"key": "channel-id",
+								"key": "channelId",
 								"value": "APP",
 								"type": "text"
 							}
@@ -212,18 +212,18 @@
 								"type": "text"
 							},
 							{
-								"key": "trace-id",
-								"value": "{{$guid}}",
+								"key": "traceParent",
+								"value": "{{traceParent}}",
 								"type": "text"
 							},
 							{
-								"key": "channel-id",
+								"key": "channelId",
 								"value": "APP",
 								"type": "text"
 							},
 							{
 								"key": "encryption-method",
-								"value": "RSA",
+								"value": "AES",
 								"type": "text"
 							},
 							{
@@ -273,18 +273,18 @@
 								"type": "text"
 							},
 							{
-								"key": "trace-id",
-								"value": "{{$guid}}",
+								"key": "traceParent",
+								"value": "{{traceParent}}",
 								"type": "text"
 							},
 							{
-								"key": "channel-id",
+								"key": "channelId",
 								"value": "APP",
 								"type": "text"
 							},
 							{
 								"key": "encryption-method",
-								"value": "RSA",
+								"value": "AES",
 								"type": "text"
 							},
 							{
@@ -295,7 +295,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cipherMessage\": \"C4/V+xQUTDDitpgq0ijEupadklVQ6x5NKjoFIjutGu9jg2E1Ka0+b2G4WC0OEXAVc/eUt902L+aGGRejZ3Wc20oBB5WkV1oDJO+F+iatOktVxOclQ2JND4x9QJnEzso42KMRhoFPuX5kZpjt+yRfQYLBTD4iJP7fmbKR3LLuIh+lzzHEPVhZ0yBZRJpurJpPTq2CDHKy/LSlKwR6P3LkIjs+qsJ1ALe86FMRI3Ig3H2bFLn6lcZeKiMT0c0ukwUUeb1OpaYHlPVUHC7MLza1PUerLStaYQdH8TiLu//P737bB08/XZ3v4w3FKF/egaYRdVoKzLwhgb0iZzZuZEsEzTaNRdWI+JnkHI8NxV9Js/JAV3TlNSO8AQ6ziVLjWdftCcd0CP5pJwTh5hT2u9af6XCNIhJ0f9JMEmnvsfD29chdIzLxJIqbioc1vHAfgVChS3mfOYuSqoAtMKJJC0bGz4YU8FYFBEmYpHpvg/82XDcKUOpVyPFAOVpy3Qi73Zd9AXS8+IW0KKaOuXGviSHbol0oWyrQJUlQVWbjhIY01mza54FKi0zjAk4iOKX36tdLiLczcrY0vrVJOC9irQrV72Dr8Ja82CgTPtJEXWKxJ2GM6kMH21FidSOkBIetYlvDOSeibFgsIo5CvrI6/K7oqEkY9ePw2GOXNKhtoLdz+PE=\"\r\n}",
+							"raw": "{\r\n    \"cipherMessage\": \"AAAADDy1p1kZj0wdDyC7SC8vn0jEI/4KnQG5E1ElRN0/JypOi6d23Q==\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -321,6 +321,41 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"function setTraceParent() {\r",
+					"    const hex = n => [...Array(n)].reduce(s => s + (Math.random()*16|0).toString(16), '');\r",
+					"    const traceId = Math.floor(Date.now()/1e3).toString(16).padStart(8,'0') + hex(24);\r",
+					"\r",
+					"    let spanId;\r",
+					"    do { spanId = hex(16); } while (/^0+$/.test(spanId));\r",
+					"\r",
+					"    //W3C Estandar\r",
+					"    const traceParent = `00-${traceId}-${spanId}-01`;\r",
+					"    pm.globals.set(\"traceParent\", traceParent);\r",
+					"}\r",
+					"\r",
+					"setTraceParent();\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
