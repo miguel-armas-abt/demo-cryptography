@@ -1,5 +1,7 @@
 package com.demo.poc.commons.core.validations.headers;
 
+import com.demo.poc.commons.core.tracing.enums.ForwardedParam;
+import com.demo.poc.commons.core.tracing.enums.TraceParam;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -17,10 +19,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class DefaultHeaders implements Serializable {
 
-  @Pattern(regexp = "^(web|app|WEB|APP)$")
+  @Pattern(regexp = ForwardedParam.Constants.CHANNEL_ID_REGEX)
   @NotEmpty
   private String channelId;
 
+  @Pattern(regexp = TraceParam.Constants.TRACE_PARENT_REGEX)
   @NotEmpty
-  private String traceId;
+  private String traceParent;
 }
