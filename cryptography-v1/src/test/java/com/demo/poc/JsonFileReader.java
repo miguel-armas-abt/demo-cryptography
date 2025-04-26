@@ -1,4 +1,4 @@
-package com.demo.poc.encryption;
+package com.demo.poc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
