@@ -22,6 +22,7 @@ class HeadersFillerTest {
     // Arrange
     HeaderTemplate template = new HeaderTemplate();
     template.setProvided(Map.of(headerName, headerValue));
+
     Map<String, String> current = new HashMap<>();
 
     // Act
@@ -44,6 +45,7 @@ class HeadersFillerTest {
     // Arrange
     HeaderTemplate template = new HeaderTemplate();
     template.setForwarded(Map.of(forwardedKey, headerName));
+
     Map<String, String> current = new HashMap<>();
     current.put(headerName, headerValue);
 
@@ -61,15 +63,16 @@ class HeadersFillerTest {
       "p2, v2, f2, h2, hv2"
   })
   @DisplayName("Given provided and forwarded params, when fillHeaders, then returns both sets correctly")
-  void givenProvidedAndForwardedParams_whenFillHeaders_thenReturnsBoth(String providedKey,
-                                                                       String providedValue,
-                                                                       String forwardedKey,
-                                                                       String headerName,
-                                                                       String headerValue) {
+  void given_providedAndForwardedParams_when_fillHeaders_then_returnsBoth(String providedKey,
+                                                                          String providedValue,
+                                                                          String forwardedKey,
+                                                                          String headerName,
+                                                                          String headerValue) {
     // Arrange
     HeaderTemplate template = new HeaderTemplate();
     template.setProvided(Map.of(providedKey, providedValue));
     template.setForwarded(Map.of(forwardedKey, headerName));
+
     Map<String, String> current = new HashMap<>();
     current.put(headerName, headerValue);
 

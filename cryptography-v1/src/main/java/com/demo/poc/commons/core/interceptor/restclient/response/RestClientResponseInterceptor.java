@@ -1,9 +1,11 @@
 package com.demo.poc.commons.core.interceptor.restclient.response;
 
-import com.demo.poc.commons.core.logging.ThreadContextInjector;
 import com.demo.poc.commons.core.logging.dto.RestResponseLog;
 import com.demo.poc.commons.core.logging.enums.LoggingType;
+import com.demo.poc.commons.core.properties.ConfigurationBaseProperties;
+import com.demo.poc.commons.core.logging.ThreadContextInjector;
 import com.demo.poc.commons.core.tracing.enums.TraceParam;
+import com.demo.poc.commons.custom.properties.ApplicationProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
@@ -15,17 +17,23 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import static com.demo.poc.commons.core.logging.enums.LoggingType.REST_CLIENT_RES;
+
 @Slf4j
 @RequiredArgsConstructor
 public class RestClientResponseInterceptor implements ClientHttpRequestInterceptor {
 
   private final ThreadContextInjector contextInjector;
+  private final ApplicationProperties properties;
 
   @Override
   public ClientHttpResponse intercept(HttpRequest request, byte[] body,
                                       ClientHttpRequestExecution execution) throws IOException {
     ClientHttpResponse response = execution.execute(request, body);
-    return generateTrace(request, response);
+    if (properties.isLoggerPresent(REST_CLIENT_RES)) {
+      return generateTrace(request, response);
+    }
+    return response;
   }
 
   private ClientHttpResponse generateTrace(HttpRequest request, ClientHttpResponse response) {

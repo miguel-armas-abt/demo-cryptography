@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "description": "Ají de gallina",
+    "category": "MAIN",
+    "productCode": "MENU0001"
+  },
+  {
+    "id": 2,
+    "description": "Torta de chocolate",
+    "category": "DESSERT",
+    "productCode": "MENU0002"
+  },
+  {
+    "id": 3,
+    "description": "Jarra de chicha",
+    "category": "DRINK",
+    "productCode": "MENU0003"
+  }
+]

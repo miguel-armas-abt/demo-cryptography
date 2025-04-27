@@ -1,0 +1,20 @@
+[
+  {
+    "productCode": "MENU0001",
+    "unitPrice": 19.9,
+    "description": "Ají de gallina",
+    "category": "MAIN"
+  },
+  {
+    "productCode": "MENU0002",
+    "unitPrice": 29.9,
+    "description": "Torta de chocolate",
+    "category": "DESSERT"
+  },
+  {
+    "productCode": "MENU0003",
+    "unitPrice": 39.9,
+    "description": "Jarra de chicha",
+    "category": "DRINK"
+  }
+]

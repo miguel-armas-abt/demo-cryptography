@@ -4,10 +4,13 @@ import com.demo.poc.commons.core.constants.Symbol;
 import com.demo.poc.commons.core.logging.dto.RestRequestLog;
 import com.demo.poc.commons.core.logging.dto.RestResponseLog;
 import com.demo.poc.commons.core.logging.enums.LoggingType;
+import com.demo.poc.commons.core.logging.obfuscation.body.BodyObfuscator;
+import com.demo.poc.commons.core.logging.obfuscation.header.HeaderObfuscator;
+import com.demo.poc.commons.core.properties.logging.ObfuscationTemplate;
 import com.demo.poc.commons.core.tracing.enums.TraceParam;
+import com.demo.poc.commons.custom.properties.ApplicationProperties;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
@@ -16,8 +19,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequiredArgsConstructor
 public class ThreadContextInjector {
+
+  private final ObfuscationTemplate obfuscation;
+
+  public ThreadContextInjector(ApplicationProperties properties) {
+    this.obfuscation = properties.searchObfuscation();
+  }
 
   private static void putInContext(String key, String value) {
     ThreadContext.put(key, StringUtils.defaultString(value));
@@ -33,8 +41,8 @@ public class ThreadContextInjector {
     populateFromHeaders(traceHeaders);
     putInContext(loggingType.getCode() + RestConstants.METHOD, restRequestLog.getMethod());
     putInContext(loggingType.getCode() + RestConstants.URI, restRequestLog.getUri());
-    putInContext(loggingType.getCode() + RestConstants.HEADERS, Utils.getHeadersAsString(restRequestLog.getRequestHeaders()));
-    putInContext(loggingType.getCode() + RestConstants.BODY, restRequestLog.getRequestBody());
+    putInContext(loggingType.getCode() + RestConstants.HEADERS, HeaderObfuscator.process(obfuscation, restRequestLog.getRequestHeaders()));
+    putInContext(loggingType.getCode() + RestConstants.BODY, BodyObfuscator.process(obfuscation, restRequestLog.getRequestBody()));
     log.info(loggingType.getMessage());
   }
 
@@ -42,9 +50,9 @@ public class ThreadContextInjector {
     ThreadContext.clearAll();
     Map<String, String> traceHeaders = TraceParam.Util.getTraceHeadersAsMap(restResponseLog.getTraceParent());
     populateFromHeaders(traceHeaders);
-    putInContext(loggingType.getCode() + RestConstants.HEADERS, Utils.getHeadersAsString(restResponseLog.getResponseHeaders()));
+    putInContext(loggingType.getCode() + RestConstants.HEADERS, HeaderObfuscator.process(obfuscation, restResponseLog.getResponseHeaders()));
     putInContext(loggingType.getCode() + RestConstants.URI, restResponseLog.getUri());
-    putInContext(loggingType.getCode() + RestConstants.BODY, restResponseLog.getResponseBody());
+    putInContext(loggingType.getCode() + RestConstants.BODY, BodyObfuscator.process(obfuscation, restResponseLog.getResponseBody()));
     putInContext(loggingType.getCode() + RestConstants.STATUS, restResponseLog.getHttpCode());
     log.info(loggingType.getMessage());
   }

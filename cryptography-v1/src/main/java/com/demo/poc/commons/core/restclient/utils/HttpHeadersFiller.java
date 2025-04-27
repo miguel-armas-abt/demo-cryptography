@@ -1,12 +1,11 @@
 package com.demo.poc.commons.core.restclient.utils;
 
-import java.util.Map;
-
 import com.demo.poc.commons.core.properties.restclient.HeaderTemplate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import org.springframework.http.HttpHeaders;
+
+import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpHeadersFiller {

@@ -3,10 +3,11 @@ package com.demo.poc.customer.mapper;
 import static com.demo.poc.customer.MockConstant.CIPHERED_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.demo.poc.commons.core.serialization.JsonSerializer;
 import com.demo.poc.customer.dto.response.CustomerResponseDto;
 import com.demo.poc.customer.dto.request.CustomerRequestDto;
 import com.demo.poc.customer.repository.customer.entity.CustomerEntity;
-import com.demo.poc.JsonFileReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,15 +19,16 @@ class CustomerMapperTest {
   private final CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
 
   private static final Gson gson = new Gson();
+  private static final JsonSerializer jsonSerializer = new JsonSerializer(new ObjectMapper());
   private static CustomerEntity CUSTOMER_ENTITY;
   private static CustomerResponseDto CUSTOMER_RESPONSE_DTO;
   private static CustomerRequestDto CUSTOMER_REQUEST_DTO;
 
   @BeforeEach
   public void setup() {
-    CUSTOMER_ENTITY = JsonFileReader.readObjectFromFile(CustomerEntity.class, "mocks/customer/CustomerEntity.json");
-    CUSTOMER_RESPONSE_DTO = JsonFileReader.readObjectFromFile(CustomerResponseDto.class, "mocks/customer/CustomerResponseDto.json");
-    CUSTOMER_REQUEST_DTO = JsonFileReader.readObjectFromFile(CustomerRequestDto.class, "mocks/customer/CustomerRequestDto.json");
+    CUSTOMER_ENTITY = jsonSerializer.readElementFromFile("mocks/customer/CustomerEntity.json", CustomerEntity.class);
+    CUSTOMER_RESPONSE_DTO = jsonSerializer.readElementFromFile("mocks/customer/CustomerResponseDto.json", CustomerResponseDto.class);
+    CUSTOMER_REQUEST_DTO = jsonSerializer.readElementFromFile("mocks/customer/CustomerRequestDto.json", CustomerRequestDto.class);
   }
 
   @Test

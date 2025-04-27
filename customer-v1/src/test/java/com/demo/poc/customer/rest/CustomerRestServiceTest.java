@@ -1,7 +1,5 @@
 package com.demo.poc.customer.rest;
 
-import static com.demo.poc.JsonFileReader.readListFromFile;
-import static com.demo.poc.JsonFileReader.readObjectFromFile;
 import static com.demo.poc.customer.enums.DocumentType.DNI;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,10 +7,12 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import com.demo.poc.commons.core.serialization.JsonSerializer;
 import com.demo.poc.commons.custom.properties.ApplicationProperties;
 import com.demo.poc.customer.dto.request.CustomerRequestDto;
 import com.demo.poc.customer.dto.response.CustomerResponseDto;
 import com.demo.poc.customer.service.CustomerService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +42,7 @@ class CustomerRestServiceTest {
   private MockMvc mockMvc;
 
   private static final Gson gson = new Gson();
+  private static final JsonSerializer jsonSerializer = new JsonSerializer(new ObjectMapper());
   private static final String URI = "/poc/customer/v1/customers";
 
   @MockBean
@@ -130,7 +131,7 @@ class CustomerRestServiceTest {
   @DisplayName("When save customer, then customer is created")
   void whenSaveCustomer_ThenCustomerIsCreated() throws Exception {
     //Arrange
-    CustomerRequestDto requestBody = readObjectFromFile(CustomerRequestDto.class, "mocks/customer/CustomerRequestDto.json");
+    CustomerRequestDto requestBody = jsonSerializer.readElementFromFile("mocks/customer/CustomerRequestDto.json", CustomerRequestDto.class);
 
     RequestBuilder requestBuilder = MockMvcRequestBuilders
       .post(URI)
@@ -153,7 +154,7 @@ class CustomerRestServiceTest {
   @DisplayName("When update customer, then customer is updated")
   void whenUpdateCustomer_ThenCustomerIsUpdated() throws Exception {
     //Arrange
-    CustomerRequestDto requestBody = readObjectFromFile(CustomerRequestDto.class, "mocks/customer/CustomerRequestDto.json");
+    CustomerRequestDto requestBody = jsonSerializer.readElementFromFile("mocks/customer/CustomerRequestDto.json", CustomerRequestDto.class);
 
     //Act
     RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -193,9 +194,9 @@ class CustomerRestServiceTest {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class MockConfig {
 
-    public static CustomerResponseDto CUSTOMER_RESPONSE_DTO = readObjectFromFile(CustomerResponseDto.class, "mocks/customer/CustomerResponseDto.json");
+    public static CustomerResponseDto CUSTOMER_RESPONSE_DTO = jsonSerializer.readElementFromFile("mocks/customer/CustomerResponseDto.json", CustomerResponseDto.class);
 
-    public static List<CustomerResponseDto> CUSTOMER_RESPONSE_DTO_LIST = readListFromFile(CustomerResponseDto.class, "mocks/customer/CustomerResponseDto_List.json");
+    public static List<CustomerResponseDto> CUSTOMER_RESPONSE_DTO_LIST = jsonSerializer.readListFromFile("mocks/customer/CustomerResponseDto_List.json", CustomerResponseDto.class);
 
     public static List<CustomerResponseDto> CUSTOMER_RESPONSE_DTO_LIST_BY_DOCUMENT_TYPE = CUSTOMER_RESPONSE_DTO_LIST.stream()
       .filter(customer -> customer.getDocumentType().equals(DNI.name()))

@@ -1,9 +1,9 @@
 package com.demo.poc.commons.core.restclient.enums;
 
-import java.time.Duration;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.time.Duration;
 
 @Getter
 @RequiredArgsConstructor

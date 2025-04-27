@@ -4,6 +4,7 @@ import com.demo.poc.commons.core.logging.dto.RestRequestLog;
 import com.demo.poc.commons.core.logging.dto.RestResponseLog;
 import com.demo.poc.commons.core.logging.enums.LoggingType;
 import com.demo.poc.commons.core.tracing.enums.TraceParam;
+import com.demo.poc.commons.custom.properties.ApplicationProperties;
 import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +20,8 @@ class ThreadContextInjectorTest {
 
   @BeforeEach
   void setUp() {
-    injector = new ThreadContextInjector();
+    ApplicationProperties properties = new ApplicationProperties();
+    injector = new ThreadContextInjector(properties);
     ThreadContext.clearAll();
   }
 

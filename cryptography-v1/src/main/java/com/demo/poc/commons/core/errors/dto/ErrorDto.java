@@ -1,14 +1,16 @@
 package com.demo.poc.commons.core.errors.dto;
 
-import com.demo.poc.commons.custom.properties.ApplicationProperties;
-import java.io.Serializable;
-
+import com.demo.poc.commons.core.properties.ConfigurationBaseProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -18,23 +20,30 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ErrorDto implements Serializable {
 
-    public static final String CODE_DEFAULT = "Default";
+  @Serial
+  private static final long serialVersionUID = 281390055501829628L;
 
-    private String code;
+  public static final String CODE_DEFAULT = "Default";
 
-    private String message;
+  @JsonProperty("type")
+  private ErrorType type;
 
-    public static ErrorDto getDefaultError(ApplicationProperties properties) {
-        return ErrorDto
-          .builder()
-          .code(CODE_DEFAULT)
-          .message(getMatchMessage(properties, CODE_DEFAULT))
-          .build();
-    }
+  private String code;
 
-    public static String getMatchMessage(ApplicationProperties properties, String errorCode) {
-        return properties
-          .getErrorMessages()
-          .get(errorCode);
-    }
+  private String message;
+
+  public static ErrorDto getDefaultError(ConfigurationBaseProperties properties) {
+    return ErrorDto
+        .builder()
+        .code(CODE_DEFAULT)
+        .message(getMatchMessage(properties, CODE_DEFAULT))
+        .type(ErrorType.SYSTEM)
+        .build();
+  }
+
+  public static String getMatchMessage(ConfigurationBaseProperties properties, String errorCode) {
+    return properties
+        .getErrorMessages()
+        .get(errorCode);
+  }
 }

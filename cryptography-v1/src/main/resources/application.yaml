@@ -15,3 +15,18 @@ configuration:
       rsa:
         private-key: ${CUSTOMER_RSA_PRIVATE_KEY}
         public-key: ${CUSTOMER_RSA_PUBLIC_KEY}
+
+# actuator endpoints
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus, beans, env, loggers, flyway
+  endpoint:
+    health:
+      show-details: always
+      probes: #livess & readiness probe
+        enabled: true

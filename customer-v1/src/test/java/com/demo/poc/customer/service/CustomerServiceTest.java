@@ -9,15 +9,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static com.demo.poc.customer.enums.DocumentType.DNI;
-import static com.demo.poc.JsonFileReader.readListFromFile;
-import static com.demo.poc.JsonFileReader.readObjectFromFile;
 
+import com.demo.poc.commons.core.serialization.JsonSerializer;
 import com.demo.poc.customer.dto.response.CustomerResponseDto;
 import com.demo.poc.customer.mapper.CustomerMapper;
 import com.demo.poc.customer.repository.cryptography.CryptographyRepository;
 import com.demo.poc.customer.repository.customer.CustomerRepository;
 import com.demo.poc.customer.repository.customer.entity.CustomerEntity;
 import com.demo.poc.customer.service.impl.CustomerServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +25,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.mapstruct.factory.Mappers;
@@ -34,7 +34,8 @@ import org.mapstruct.factory.Mappers;
 class CustomerServiceTest {
 
   private static CustomerService customerService;
-  private static Gson gson;
+  private static final Gson gson = new Gson();
+  private static final JsonSerializer jsonSerializer = new JsonSerializer(new ObjectMapper());
 
   private List<CustomerResponseDto> CUSTOMER_RESPONSE_DTO_LIST;
   private CustomerResponseDto CUSTOMER_RESPONSE_DTO;
@@ -42,13 +43,12 @@ class CustomerServiceTest {
   @BeforeAll
   public static void init() {
     customerService = MockConfig.mockCustomerService();
-    gson = new Gson();
   }
 
   @BeforeEach
   public void setup() {
-    CUSTOMER_RESPONSE_DTO_LIST = readListFromFile(CustomerResponseDto.class, "mocks/customer/CustomerResponseDto_List.json");
-    CUSTOMER_RESPONSE_DTO = readObjectFromFile(CustomerResponseDto.class, "mocks/customer/CustomerResponseDto.json");
+    CUSTOMER_RESPONSE_DTO_LIST = jsonSerializer.readListFromFile("mocks/customer/CustomerResponseDto_List.json", CustomerResponseDto.class);
+    CUSTOMER_RESPONSE_DTO = jsonSerializer.readElementFromFile("mocks/customer/CustomerResponseDto.json", CustomerResponseDto.class);
   }
 
   @Test
@@ -100,8 +100,8 @@ class CustomerServiceTest {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   private static class MockConfig {
 
-    private static final List<CustomerEntity> CUSTOMER_ENTITY_ALL = readListFromFile(CustomerEntity.class, "mocks/customer/CustomerEntity_List.json");
-    private static final CustomerEntity CUSTOMER_ENTITY_BY_UNIQUE_CODE = readObjectFromFile(CustomerEntity.class, "mocks/customer/CustomerEntity.json");
+    private static final List<CustomerEntity> CUSTOMER_ENTITY_ALL = jsonSerializer.readListFromFile("mocks/customer/CustomerEntity_List.json", CustomerEntity.class);
+    private static final CustomerEntity CUSTOMER_ENTITY_BY_UNIQUE_CODE = jsonSerializer.readElementFromFile("mocks/customer/CustomerEntity.json", CustomerEntity.class);
 
     public static CustomerService mockCustomerService() {
       CustomerRepository repository = mockCustomerRepository();

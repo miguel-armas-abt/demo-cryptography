@@ -1,13 +1,12 @@
 package com.demo.poc.commons.core.restclient.dto;
 
-import java.io.Serializable;
-import java.util.Map;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
 import org.springframework.http.HttpMethod;
+
+import java.io.Serializable;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -25,4 +24,6 @@ public class ExchangeRequest<I, O> implements Serializable {
   private I requestBody;
 
   private Class<O> responseClass;
+
+  private Class<?> errorWrapperClass;
 }

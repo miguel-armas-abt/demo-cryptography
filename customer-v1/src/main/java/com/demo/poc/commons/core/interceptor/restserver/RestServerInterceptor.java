@@ -8,6 +8,7 @@ import com.demo.poc.commons.core.logging.dto.RestRequestLog;
 import com.demo.poc.commons.core.logging.dto.RestResponseLog;
 import com.demo.poc.commons.core.logging.enums.LoggingType;
 import com.demo.poc.commons.core.tracing.enums.TraceParam;
+import com.demo.poc.commons.custom.properties.ApplicationProperties;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ public class RestServerInterceptor implements Filter {
   private static final List<String> EXCLUDED_PATHS = List.of("/h2-console", "/swagger-ui", "/actuator");
 
   private final ThreadContextInjector contextInjector;
+  private final ApplicationProperties properties;
 
   @Override
   public void init(FilterConfig filterConfig) {
@@ -64,26 +66,30 @@ public class RestServerInterceptor implements Filter {
   }
 
   private void generateTraceOfRequest(HttpServletRequest request) {
-    RestRequestLog log = RestRequestLog.builder()
-        .uri(extractRequestURL(request))
-        .requestBody(extractRequestBody(request))
-        .requestHeaders(extractRequestHeadersAsMap(request))
-        .method(request.getMethod())
-        .traceParent(request.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase()))
-        .build();
+    if(properties.isLoggerPresent(LoggingType.REST_SERVER_REQ)) {
+      RestRequestLog log = RestRequestLog.builder()
+          .uri(extractRequestURL(request))
+          .requestBody(extractRequestBody(request))
+          .requestHeaders(extractRequestHeadersAsMap(request))
+          .method(request.getMethod())
+          .traceParent(request.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase()))
+          .build();
 
-    contextInjector.populateFromRestRequest(LoggingType.REST_SERVER_REQ, log);
+      contextInjector.populateFromRestRequest(LoggingType.REST_SERVER_REQ, log);
+    }
   }
 
   private void generateTraceOfResponse(HttpServletRequest httpRequest, HttpServletResponse response, String responseBody) {
-    RestResponseLog log = RestResponseLog.builder()
-        .uri(extractRequestURL(httpRequest))
-        .responseBody(responseBody)
-        .responseHeaders(ResponseUtil.extractResponseHeadersAsMap(response))
-        .httpCode(String.valueOf(response.getStatus()))
-        .traceParent(httpRequest.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase()))
-        .build();
-    contextInjector.populateFromRestResponse(LoggingType.REST_SERVER_RES, log);
+    if(properties.isLoggerPresent(LoggingType.REST_SERVER_RES)) {
+      RestResponseLog log = RestResponseLog.builder()
+          .uri(extractRequestURL(httpRequest))
+          .responseBody(responseBody)
+          .responseHeaders(ResponseUtil.extractResponseHeadersAsMap(response))
+          .httpCode(String.valueOf(response.getStatus()))
+          .traceParent(httpRequest.getHeader(TraceParam.TRACE_PARENT.getKey().toLowerCase()))
+          .build();
+      contextInjector.populateFromRestResponse(LoggingType.REST_SERVER_RES, log);
+    }
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
