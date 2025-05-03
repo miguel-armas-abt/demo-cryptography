@@ -5,7 +5,7 @@ info:
   description: API for encrypting and decrypting values using RSA or AES.
 
 servers:
-  - url: http://localhost:8094
+  - url: http://localhost:8080
 
 paths:
   /poc/cryptography/v1/encryption/encrypt:

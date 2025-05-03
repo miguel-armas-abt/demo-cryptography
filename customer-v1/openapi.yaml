@@ -5,7 +5,7 @@ info:
   description: API for managing customers
 
 servers:
-  - url: http://localhost:8093
+  - url: http://localhost:8081
 
 paths:
   /poc/customer/v1/customers/{uniqueCode}:

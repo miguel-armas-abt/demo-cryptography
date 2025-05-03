@@ -1,5 +1,5 @@
 server:
-  port: 8093
+  port: 8081
 
 spring:
   application:
@@ -19,7 +19,7 @@ spring:
 
   h2:
     console:
-      enabled: true #http://localhost:8093/h2-console/
+      enabled: true #http://localhost:8081/h2-console/
       settings:
         web-allow-others: true
   datasource:
@@ -36,7 +36,7 @@ configuration:
   rest-clients:
     cryptography-v1:
       request:
-        endpoint: ${CRYPTOGRAPHY_V1_ENDPOINT:http://localhost:8094/poc/cryptography/v1/encryption}
+        endpoint: ${CRYPTOGRAPHY_V1_ENDPOINT:http://localhost:8080/poc/cryptography/v1/encryption}
         headers:
           provided:
             encryptionMethod: ${CRYPTOGRAPHY_V1_HEADER_ENCRYPTION_METHOD:AES}
