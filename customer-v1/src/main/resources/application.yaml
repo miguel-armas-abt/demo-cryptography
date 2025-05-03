@@ -39,7 +39,7 @@ configuration:
         endpoint: ${CRYPTOGRAPHY_V1_ENDPOINT:http://localhost:8080/poc/cryptography/v1/encryption}
         headers:
           provided:
-            encryptionMethod: ${CRYPTOGRAPHY_V1_HEADER_ENCRYPTION_METHOD:AES}
+            encryption-method: ${CRYPTOGRAPHY_V1_HEADER_ENCRYPTION_METHOD:AES}
             feature: ${CRYPTOGRAPHY_V1_HEADER_FEATURE:customers}
           forwarded:
             channelId: channelId

@@ -24,9 +24,14 @@ mvn clean install
 docker build -t miguelarmasabt/customer:v1.0.1 -f ./Dockerfile .
 ```
 
+⚙️ Crear red
+```shell
+docker network create --driver bridge common-network
+```
+
 ⚙️ Ejecutar contenedor
 ```shell
-docker run --rm -p 8081:8081 --env-file ./variables.env --name customer-v1  miguelarmasabt/customer:v1.0.1
+docker run --rm -p 8081:8081 --env-file ./variables.env --name customer-v1 --network common-network miguelarmasabt/customer:v1.0.1
 ```
 
 ---

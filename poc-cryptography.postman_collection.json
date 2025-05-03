@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b8bd5df1-36ad-4450-95aa-d1c8cdd33579",
+		"_postman_id": "d044c47b-b304-4e57-a7fa-edd1af3b2768",
 		"name": "poc-cryptography",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33527392"
+		"_exporter_id": "13773998"
 	},
 	"item": [
 		{
@@ -40,12 +40,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8093/ibk/v1/customers/1",
+							"raw": "http://localhost:8081/ibk/v1/customers/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8093",
+							"port": "8081",
 							"path": [
 								"ibk",
 								"v1",
@@ -87,12 +87,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8093/ibk/v1/customers/1",
+							"raw": "http://localhost:8081/ibk/v1/customers/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8093",
+							"port": "8081",
 							"path": [
 								"ibk",
 								"v1",
@@ -134,12 +134,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8093/ibk/v1/customers",
+							"raw": "http://localhost:8081/ibk/v1/customers",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8093",
+							"port": "8081",
 							"path": [
 								"ibk",
 								"v1",
@@ -171,12 +171,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8093/ibk/v1/customers",
+							"raw": "http://localhost:8081/ibk/v1/customers",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8093",
+							"port": "8081",
 							"path": [
 								"ibk",
 								"v1",
@@ -242,12 +242,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8094/poc/cryptography/v1/encryption/encrypt",
+							"raw": "http://localhost:8080/poc/cryptography/v1/encryption/encrypt",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8094",
+							"port": "8080",
 							"path": [
 								"poc",
 								"cryptography",
@@ -303,12 +303,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8094/poc/cryptography/v1/encryption/decrypt",
+							"raw": "http://localhost:8080/poc/cryptography/v1/encryption/decrypt",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8094",
+							"port": "8080",
 							"path": [
 								"poc",
 								"cryptography",

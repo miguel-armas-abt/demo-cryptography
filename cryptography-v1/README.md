@@ -24,9 +24,14 @@ mvn clean install
 docker build -t miguelarmasabt/cryptography:v1.0.1 -f ./Dockerfile .
 ```
 
+⚙️ Crear red
+```shell
+docker network create --driver bridge common-network
+```
+
 ⚙️ Ejecutar contenedor
 ```shell
-docker run --rm -p 8080:8080 --env-file ./variables.env --name cryptography-v1  miguelarmasabt/cryptography:v1.0.1
+docker run --rm -p 8080:8080 --env-file ./variables.env --name cryptography-v1 --network common-network miguelarmasabt/cryptography:v1.0.1
 ```
 
 ---
