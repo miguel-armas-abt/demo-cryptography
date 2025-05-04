@@ -1,7 +1,7 @@
 package com.demo.poc.commons.core.restclient.error;
 
 import com.demo.poc.commons.core.errors.dto.ErrorDto;
-import com.demo.poc.commons.core.errors.dto.ErrorType;
+import com.demo.poc.commons.core.errors.dto.ErrorOrigin;
 import com.demo.poc.commons.core.errors.exceptions.RestClientException;
 import com.demo.poc.commons.core.errors.exceptions.NoSuchRestClientErrorExtractorException;
 import com.demo.poc.commons.core.errors.selector.RestClientErrorSelector;
@@ -39,10 +39,10 @@ public class RestClientErrorHandler {
 
     String selectedCode = restClientErrorSelector.selectCode(extractedCode, serviceName);
     String selectedMessage = restClientErrorSelector.selectMessage(selectedCode, extractedMessage, serviceName);
-    ErrorType selectedErrorType = selectType(errorWrapperClass);
+    ErrorOrigin selectedErrorOrigin = selectType(errorWrapperClass);
     HttpStatusCode selectedHttpStatus = HttpStatusCode.valueOf(restClientErrorSelector.selectHttpCode(httpException.getStatusCode().value(), errorWrapperClass, extractedCode, serviceName));
 
-    return new RestClientException(selectedCode, selectedMessage, selectedErrorType, selectedHttpStatus);
+    return new RestClientException(selectedCode, selectedMessage, selectedErrorOrigin, selectedHttpStatus);
   }
 
   private Map.Entry<String, String> getCodeAndMessage(String jsonBody, Class<?> errorWrapperClass) {

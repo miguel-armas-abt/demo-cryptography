@@ -1,28 +1,20 @@
 package com.demo.poc.commons.core.errors.exceptions;
 
 import com.demo.poc.commons.core.errors.dto.ErrorDto;
-import com.demo.poc.commons.core.errors.dto.ErrorType;
+import com.demo.poc.commons.core.errors.dto.ErrorOrigin;
 import lombok.Getter;
 import org.springframework.http.HttpStatusCode;
 
-import java.io.Serial;
-
 @Getter
-public class RestClientException extends RuntimeException {
+public class RestClientException extends GenericException {
 
-  @Serial
-  private static final long serialVersionUID = 480700693894159856L;
-
-  private final ErrorDto errorDetail;
-  private final HttpStatusCode httpStatusCode;
-
-  public RestClientException(String code, String message, ErrorType errorType, HttpStatusCode httpStatusCode) {
+  public RestClientException(String code, String message, ErrorOrigin errorOrigin, HttpStatusCode httpStatusCode) {
     super(message);
+    this.httpStatus = httpStatusCode;
     this.errorDetail = ErrorDto.builder()
-        .type(errorType)
+        .origin(errorOrigin)
         .code(code)
         .message(message)
         .build();
-    this.httpStatusCode = httpStatusCode;
   }
 }

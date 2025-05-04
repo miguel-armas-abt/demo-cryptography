@@ -1,7 +1,7 @@
 package com.demo.poc.commons.core.errors.selector;
 
 import com.demo.poc.commons.core.errors.dto.ErrorDto;
-import com.demo.poc.commons.core.errors.dto.ErrorType;
+import com.demo.poc.commons.core.errors.dto.ErrorOrigin;
 import com.demo.poc.commons.core.properties.ConfigurationBaseProperties;
 import com.demo.poc.commons.core.properties.restclient.RestClient;
 import com.demo.poc.commons.core.properties.restclient.RestClientError;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RestClientErrorSelector {
 
-  private static final String[] HTTP_ALLOWED_CODES = {"400", "401"};
+  private static final String[] HTTP_ALLOWED_CODES = {"400", "401", "403", "404"};
   private static final int HTTP_CONFLICT_CODE = 409;
 
   private final ConfigurationBaseProperties properties;
@@ -48,10 +48,10 @@ public class RestClientErrorSelector {
         .orElseGet(() -> message);
   }
 
-  public static ErrorType selectType(Class<?> errorWrapperClass) {
+  public static ErrorOrigin selectType(Class<?> errorWrapperClass) {
     return (errorWrapperClass.isAssignableFrom(ErrorDto.class))
-        ? ErrorType.FORWARDED
-        : ErrorType.EXTERNAL;
+        ? ErrorOrigin.PARTNER
+        : ErrorOrigin.THIRD_PARTY;
   }
 
   public int selectHttpCode(int httpCode,

@@ -1,7 +1,7 @@
 package com.demo.poc.commons.core.errors.selector;
 
 import com.demo.poc.commons.core.errors.dto.ErrorDto;
-import com.demo.poc.commons.core.errors.dto.ErrorType;
+import com.demo.poc.commons.core.errors.dto.ErrorOrigin;
 import com.demo.poc.commons.custom.exceptions.ErrorDictionary;
 import com.demo.poc.commons.core.errors.exceptions.GenericException;
 import com.demo.poc.commons.core.properties.ConfigurationBaseProperties;
@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -59,8 +60,12 @@ public class ResponseErrorSelector {
   private static <T extends Throwable> ErrorDto extractError(T exception) {
     ErrorDto error = null;
 
-    if (exception instanceof GenericException genericException)
+    if (exception instanceof GenericException genericException) {
       error = genericException.getErrorDetail();
+      if (Objects.nonNull(genericException.getMessage())) {
+        error.setMessage(genericException.getMessage());
+      }
+    }
 
     if (exception instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
       error = extractError(methodArgumentNotValidException);
@@ -81,7 +86,7 @@ public class ResponseErrorSelector {
         .collect(Collectors.joining(";"));
 
     return ErrorDto.builder()
-        .type(ErrorType.BUSINESS)
+        .origin(ErrorOrigin.OWN)
         .code(ErrorDictionary.INVALID_FIELD.getCode())
         .message(message)
         .build();
@@ -89,7 +94,7 @@ public class ResponseErrorSelector {
 
   private static ErrorDto extractError(MissingRequestHeaderException exception) {
     return ErrorDto.builder()
-            .type(ErrorType.BUSINESS)
+            .origin(ErrorOrigin.OWN)
             .code(ErrorDictionary.INVALID_FIELD.getCode())
             .message(exception.getBody().getDetail())
             .build();

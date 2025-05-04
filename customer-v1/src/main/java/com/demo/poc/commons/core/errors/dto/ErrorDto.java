@@ -25,8 +25,8 @@ public class ErrorDto implements Serializable {
 
   public static final String CODE_DEFAULT = "Default";
 
-  @JsonProperty("type")
-  private ErrorType type;
+  @JsonProperty("origin")
+  private ErrorOrigin origin;
 
   private String code;
 
@@ -37,7 +37,7 @@ public class ErrorDto implements Serializable {
         .builder()
         .code(CODE_DEFAULT)
         .message(getMatchMessage(properties, CODE_DEFAULT))
-        .type(ErrorType.SYSTEM)
+        .origin(ErrorOrigin.OWN)
         .build();
   }
 
