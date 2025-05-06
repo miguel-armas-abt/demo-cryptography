@@ -26,9 +26,9 @@ public class RestClientErrorHandler {
   private final List<RestClientErrorExtractor> restClientErrorExtractors;
   private final RestClientErrorSelector restClientErrorSelector;
 
-  public RestClientException build(HttpStatusCodeException httpException,
-                                   Class<?> errorWrapperClass,
-                                   String serviceName) {
+  public RestClientException handleError(HttpStatusCodeException httpException,
+                                         Class<?> errorWrapperClass,
+                                         String serviceName) {
 
     String jsonBody = httpException.getResponseBodyAsString();
 

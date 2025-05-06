@@ -40,7 +40,7 @@ public class RestClientTemplate {
 
     }
     catch (HttpStatusCodeException httpException) {
-      throw restClientErrorHandler.build(httpException, request.getErrorWrapperClass(), serviceName);
+      throw restClientErrorHandler.handleError(httpException, request.getErrorWrapperClass(), serviceName);
     }
   }
 
