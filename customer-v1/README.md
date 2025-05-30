@@ -57,16 +57,16 @@ docker build -t miguelarmasabt/customer:v1.0.1 -f ./Dockerfile .
 
 ⚙️ Crear namespace y aplicar manifiestos
 ```shell
-kubectl create namespace security
-kubectl apply -f ./k8s.yaml -n security
+kubectl create namespace poc
+kubectl apply -f ./k8s.yaml -n poc
 ```
 
 ⚙️ Eliminar orquestación
 ```shell
-kubectl delete -f ./k8s.yaml -n security
+kubectl delete -f ./k8s.yaml -n poc
 ```
 
 ⚙️ Port-forward
 ```shell
-kubectl port-forward <pod-id> 8081:8081 -n security
+kubectl port-forward <pod-id> 8081:8081 -n poc
 ```
