@@ -1,6 +1,6 @@
 package com.demo.poc.customer.rest;
 
-import static com.demo.poc.customer.enums.DocumentType.DNI;
+import static com.demo.poc.entrypoint.customer.enums.DocumentType.DNI;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -9,9 +9,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.demo.poc.commons.core.serialization.JsonSerializer;
 import com.demo.poc.commons.properties.ApplicationProperties;
-import com.demo.poc.customer.dto.request.CustomerRequestDto;
-import com.demo.poc.customer.dto.response.CustomerResponseDto;
-import com.demo.poc.customer.service.CustomerService;
+import com.demo.poc.entrypoint.customer.dto.request.CustomerRequestDto;
+import com.demo.poc.entrypoint.customer.dto.response.CustomerResponseDto;
+import com.demo.poc.entrypoint.customer.rest.CustomerRestService;
+import com.demo.poc.entrypoint.customer.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.util.List;

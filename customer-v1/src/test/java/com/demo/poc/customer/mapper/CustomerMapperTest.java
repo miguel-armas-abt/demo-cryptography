@@ -4,9 +4,10 @@ import static com.demo.poc.customer.MockConstant.CIPHERED_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.demo.poc.commons.core.serialization.JsonSerializer;
-import com.demo.poc.customer.dto.response.CustomerResponseDto;
-import com.demo.poc.customer.dto.request.CustomerRequestDto;
-import com.demo.poc.customer.repository.customer.entity.CustomerEntity;
+import com.demo.poc.entrypoint.customer.dto.response.CustomerResponseDto;
+import com.demo.poc.entrypoint.customer.dto.request.CustomerRequestDto;
+import com.demo.poc.entrypoint.customer.mapper.CustomerMapper;
+import com.demo.poc.entrypoint.customer.repository.customer.entity.CustomerEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
