@@ -1,4 +1,4 @@
-package com.demo.poc.commons.config;
+package com.demo.poc.commons.config.di;
 
 import com.demo.poc.commons.core.errors.selector.ResponseErrorSelector;
 import com.demo.poc.commons.core.interceptor.error.ErrorInterceptor;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 
 @Configuration
-public class InterceptorConfig {
+public class InterceptorDIConfig {
 
   @Bean
   public ClientHttpRequestInterceptor restClientRequestInterceptor(ThreadContextInjector contextInjector,

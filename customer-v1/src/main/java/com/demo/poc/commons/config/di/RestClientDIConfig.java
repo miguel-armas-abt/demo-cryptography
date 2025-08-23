@@ -1,4 +1,4 @@
-package com.demo.poc.commons.config;
+package com.demo.poc.commons.config.di;
 
 import com.demo.poc.commons.core.errors.selector.RestClientErrorSelector;
 import com.demo.poc.commons.core.restclient.error.RestClientErrorHandler;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Configuration
-public class RestClientConfig {
+public class RestClientDIConfig {
 
   @Bean
   public RestTemplate restTemplate(List<ClientHttpRequestInterceptor> requestInterceptors) {

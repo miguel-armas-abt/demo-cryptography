@@ -1,4 +1,4 @@
-package com.demo.poc.commons.config;
+package com.demo.poc.commons.config.di;
 
 import com.demo.poc.commons.core.restclient.error.RestClientErrorMapper;
 import com.demo.poc.commons.core.restclient.error.extractor.poc.DefaultErrorExtractor;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ErrorConfig {
+public class ErrorDIConfig {
 
   @Bean
   public DefaultErrorExtractor defaultErrorExtractor(RestClientErrorMapper errorMapper) {

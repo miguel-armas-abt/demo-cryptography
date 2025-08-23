@@ -1,4 +1,4 @@
-package com.demo.poc.commons.config;
+package com.demo.poc.commons.config.di;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
 
 @Configuration
-public class ValidatorConfig {
+public class ValidatorDIConfig {
 
   @Bean
   public BodyValidator bodyValidator(Validator validator) {

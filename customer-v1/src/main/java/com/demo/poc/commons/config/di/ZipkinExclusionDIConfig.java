@@ -1,4 +1,4 @@
-package com.demo.poc.commons.config;
+package com.demo.poc.commons.config.di;
 
 import java.util.Objects;
 
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ZipkinExclusionConfig {
+public class ZipkinExclusionDIConfig {
 
   private static final String URI = "uri";
   private static final String ACTUATOR_PATH = "/actuator";
