@@ -3,7 +3,7 @@ package com.demo.poc.customer.repository.cryptography;
 import com.demo.poc.commons.core.errors.dto.ErrorDto;
 import com.demo.poc.commons.core.properties.restclient.RestClient;
 import com.demo.poc.commons.core.restclient.RestClientTemplate;
-import com.demo.poc.commons.custom.properties.ApplicationProperties;
+import com.demo.poc.commons.properties.ApplicationProperties;
 import com.demo.poc.customer.repository.cryptography.wrapper.request.DecryptionRequestWrapper;
 import com.demo.poc.customer.repository.cryptography.wrapper.request.EncryptionRequestWrapper;
 import com.demo.poc.customer.repository.cryptography.wrapper.response.DecryptionResponseWrapper;

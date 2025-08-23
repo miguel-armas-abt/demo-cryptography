@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.demo.poc.commons.core.serialization.JsonSerializer;
-import com.demo.poc.commons.custom.properties.ApplicationProperties;
+import com.demo.poc.commons.properties.ApplicationProperties;
 import com.demo.poc.customer.dto.request.CustomerRequestDto;
 import com.demo.poc.customer.dto.response.CustomerResponseDto;
 import com.demo.poc.customer.service.CustomerService;

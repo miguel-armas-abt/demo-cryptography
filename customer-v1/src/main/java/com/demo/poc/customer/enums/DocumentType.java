@@ -1,6 +1,6 @@
 package com.demo.poc.customer.enums;
 
-import com.demo.poc.commons.custom.exceptions.InvalidDocumentTypeException;
+import com.demo.poc.customer.exceptions.InvalidDocumentTypeException;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;

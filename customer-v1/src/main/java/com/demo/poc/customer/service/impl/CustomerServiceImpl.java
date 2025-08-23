@@ -1,7 +1,7 @@
 package com.demo.poc.customer.service.impl;
 
-import com.demo.poc.commons.custom.exceptions.CustomerAlreadyExistsException;
-import com.demo.poc.commons.custom.exceptions.CustomerNotFoundException;
+import com.demo.poc.customer.exceptions.CustomerAlreadyExistsException;
+import com.demo.poc.customer.exceptions.CustomerNotFoundException;
 import com.demo.poc.customer.repository.cryptography.CryptographyRepository;
 import com.demo.poc.customer.service.CustomerService;
 import com.demo.poc.customer.dto.request.CustomerRequestDto;
