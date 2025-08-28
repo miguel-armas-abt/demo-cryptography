@@ -10,7 +10,7 @@
     <relativePath/>
   </parent>
 
-  <groupId>com.demo.poc</groupId>
+  <groupId>com.demo.service</groupId>
   <artifactId>cryptography-v1</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Cryptography V1</name>
