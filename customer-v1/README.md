@@ -4,7 +4,7 @@
 ---
 ## 📋 Core library
 [🌐 Documentación](https://github.com/miguel-armas-abt/backend-core-library) <br>
-[🏷️ Versión](./src/main/java/com/demo/poc/commons/core/package-info.java) <br>
+[🏷️ Versión](./src/main/java/com/demo/service/commons/core/package-info.java) <br>
 
 ---
 
