@@ -1,6 +1,5 @@
 package com.demo.service.entrypoint.encryption.rest;
 
-import com.demo.commons.restserver.utils.RestServerUtils;
 import com.demo.commons.validations.ParamValidator;
 import com.demo.service.entrypoint.encryption.params.EncryptionHeader;
 import com.demo.service.entrypoint.encryption.dto.request.DecryptionRequestDto;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -34,21 +31,17 @@ public class EncryptionRestService {
   @PostMapping("encrypt")
   public ResponseEntity<EncryptionResponseDto> encrypt(HttpServletRequest servletRequest,
                                                        @Valid @RequestBody EncryptionRequestDto encryptionRequest) {
-    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
-    EncryptionHeader params = paramValidator.validateAndGet(headers, EncryptionHeader.class);
-
-    EncryptionMethod method = EncryptionMethod.parse(params.getEncryptionMethod());
-    return ResponseEntity.ok(service.encrypt(method, params.getFeature(), encryptionRequest.getValue()));
+    EncryptionHeader headers = paramValidator.validateHeadersAndGet(servletRequest, EncryptionHeader.class).getKey();
+    EncryptionMethod method = EncryptionMethod.parse(headers.getEncryptionMethod());
+    return ResponseEntity.ok(service.encrypt(method, headers.getFeature(), encryptionRequest.getValue()));
   }
 
   @PostMapping("decrypt")
   public ResponseEntity<DecryptionResponseDto> decrypt(HttpServletRequest servletRequest,
                                                        @Valid @RequestBody DecryptionRequestDto decryptionRequest) {
-    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
-    EncryptionHeader params = paramValidator.validateAndGet(headers, EncryptionHeader.class);
-
-    EncryptionMethod method = EncryptionMethod.parse(params.getEncryptionMethod());
-    return ResponseEntity.ok(service.decrypt(method, params.getFeature(), decryptionRequest.getCipherMessage()));
+    EncryptionHeader headers = paramValidator.validateHeadersAndGet(servletRequest, EncryptionHeader.class).getKey();
+    EncryptionMethod method = EncryptionMethod.parse(headers.getEncryptionMethod());
+    return ResponseEntity.ok(service.decrypt(method, headers.getFeature(), decryptionRequest.getCipherMessage()));
   }
 
 }

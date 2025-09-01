@@ -1,6 +1,5 @@
 package com.demo.service.entrypoint.customer.rest;
 
-import com.demo.commons.restserver.utils.RestServerUtils;
 import com.demo.commons.validations.headers.DefaultHeaders;
 import com.demo.commons.validations.ParamValidator;
 import com.demo.service.entrypoint.customer.dto.request.CustomerRequestDto;
@@ -41,17 +40,14 @@ public class CustomerRestService {
   @GetMapping(value = "/{uniqueCode}")
   public ResponseEntity<CustomerResponseDto> findByUniqueCode(HttpServletRequest servletRequest,
                                                               @PathVariable(name = "uniqueCode") Long uniqueCode) {
-    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
-    paramValidator.validate(headers, DefaultHeaders.class);
-
+    Map<String, String> headers = paramValidator.validateHeadersAndGet(servletRequest, DefaultHeaders.class).getValue();
     return ResponseEntity.ok(service.findByUniqueCode(headers, uniqueCode));
   }
 
   @GetMapping
   public ResponseEntity<List<CustomerResponseDto>> findByDocumentType(HttpServletRequest servletRequest) {
-    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
-    paramValidator.validate(headers, DefaultHeaders.class);
-    CustomerParam customerParam = paramValidator.validateAndGet(RestServerUtils.extractQueryParamsAsMap(servletRequest), CustomerParam.class);
+    Map<String, String> headers = paramValidator.validateHeadersAndGet(servletRequest, DefaultHeaders.class).getValue();
+    CustomerParam customerParam = paramValidator.validateQueryParamsAndGet(servletRequest, CustomerParam.class).getKey();
 
     List<CustomerResponseDto> customerResponseDtoList = service.findByDocumentType(headers, customerParam.getDocumentType());
     return (customerResponseDtoList == null || customerResponseDtoList.isEmpty())
@@ -62,8 +58,7 @@ public class CustomerRestService {
   @PostMapping
   public ResponseEntity<Void> save(HttpServletRequest servletRequest,
                                    @Valid @RequestBody CustomerRequestDto customerRequestDto) {
-    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
-    paramValidator.validate(headers, DefaultHeaders.class);
+    Map<String, String> headers = paramValidator.validateHeadersAndGet(servletRequest, DefaultHeaders.class).getValue();
 
     Long uniqueCode = service.save(headers, customerRequestDto);
     return ResponseEntity
@@ -75,8 +70,7 @@ public class CustomerRestService {
   public ResponseEntity<Void> update(HttpServletRequest servletRequest,
                                      @Valid @RequestBody CustomerRequestDto customerRequestDto,
                                      @PathVariable("uniqueCode") Long uniqueCode) {
-    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
-    paramValidator.validate(headers, DefaultHeaders.class);
+    Map<String, String> headers = paramValidator.validateHeadersAndGet(servletRequest, DefaultHeaders.class).getValue();
 
     uniqueCode = service.update(headers, uniqueCode, customerRequestDto);
     return ResponseEntity
@@ -87,8 +81,7 @@ public class CustomerRestService {
   @DeleteMapping(value = "/{uniqueCode}")
   public ResponseEntity<Void> delete(HttpServletRequest servletRequest,
                                      @PathVariable("uniqueCode") Long uniqueCode) {
-    Map<String, String> headers = RestServerUtils.extractHeadersAsMap(servletRequest);
-    paramValidator.validate(headers, DefaultHeaders.class);
+    Map<String, String> headers = paramValidator.validateHeadersAndGet(servletRequest, DefaultHeaders.class).getValue();
 
     uniqueCode = service.deleteByUniqueCode(headers, uniqueCode);
     return ResponseEntity
