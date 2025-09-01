@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "d044c47b-b304-4e57-a7fa-edd1af3b2768",
-		"name": "poc-cryptography",
+		"name": "demo-cryptography",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13773998"
 	},
@@ -40,14 +40,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/ibk/v1/customers/1",
+							"raw": "http://localhost:8081/poc/customer/v1/customers/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"ibk",
+								"poc",
+								"customer",
 								"v1",
 								"customers",
 								"1"
@@ -87,14 +88,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/ibk/v1/customers/1",
+							"raw": "http://localhost:8081/poc/customer/v1/customers/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"ibk",
+								"poc",
+								"customer",
 								"v1",
 								"customers",
 								"1"
@@ -134,14 +136,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/ibk/v1/customers",
+							"raw": "http://localhost:8081/poc/customer/v1/customers",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"ibk",
+								"poc",
+								"customer",
 								"v1",
 								"customers"
 							]
@@ -171,14 +174,15 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8081/ibk/v1/customers",
+							"raw": "http://localhost:8081/poc/customer/v1/customers",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"ibk",
+								"poc",
+								"customer",
 								"v1",
 								"customers"
 							],
