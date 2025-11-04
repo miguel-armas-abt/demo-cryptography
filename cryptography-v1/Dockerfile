@@ -1,12 +1,20 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
+
 ARG user=admin
-ARG group=pocgroup
+ARG group=demogroup
 ARG uid=1000
 ARG gid=1000
+
 RUN groupadd -g ${gid} ${group} && useradd -u ${uid} -G ${group} -s /bin/sh ${user}
-USER admin:pocgroup
-VOLUME /tmp
+
+WORKDIR /app
 ARG JAR_FILE="cryptography-v1-0.0.1-SNAPSHOT.jar"
-ADD target/${JAR_FILE} app.jar
+COPY --chown=${uid}:${gid} target/${JAR_FILE} /app/app.jar
+VOLUME /tmp
+
+USER ${user}:${group}
 ENV JAVA_OPTS=""
-ENTRYPOINT [ "sh","-c","java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+
+ADD target/${JAR_FILE} app.jar
+
+ENTRYPOINT ["sh","-c","java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar"]

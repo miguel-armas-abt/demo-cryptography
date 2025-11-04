@@ -1,72 +1,64 @@
+Reemplazar los siguientes valores donde corresponda:
 
-[← Regresar](../README.md) <br>
+| variable          | valor                                 |
+|-------------------|---------------------------------------|
+| `<APP_IMAGE>`     | `miguelarmasabt/cryptography:v1.0.1`  |
+| `<APP_CONTAINER>` | `cryptography-v1`                     |
+| `<APP_PORTS>`     | `8080:8080`                           |
 
----
-## 📋 Core library
-[🌐 Documentación](https://github.com/miguel-armas-abt/backend-core-library) <br>
-[🏷️ Versión](./src/main/java/com/demo/service/commons/core/package-info.java) <br>
+## ▶️ Local
 
----
-
-## ▶️ Despliegue local
-
-1. Generar el compilado
-```sh
-mvn clean install
-```
-
+1. Descargar e instalar [commons-spring-boot-parent](https://github.com/miguel-armas-abt/commons-spring-boot-parent/README.md)
 2. Configurar las [variables de entorno](./variables.env) en el IDE.
-
-2. Ejecutar aplicación
-
+3. Ejecutar aplicación
 
 ---
 
-## ▶️ Despliegue con Docker
+## ▶️ Docker
 
-⚙️ Crear imagen
+1. Crear imagen
 ```shell
-docker build -t miguelarmasabt/cryptography:v1.0.1 -f ./Dockerfile .
+docker build -t <APP_IMAGE> -f ./Dockerfile .
 ```
 
-⚙️ Crear red
+2. Crear red
 ```shell
 docker network create --driver bridge common-network
 ```
 
-⚙️ Ejecutar contenedor
+3. Ejecutar contenedor
 ```shell
-docker run --rm -p 8080:8080 --env-file ./variables.env --name cryptography-v1 --network common-network miguelarmasabt/cryptography:v1.0.1
+docker run --rm -p <APP_PORTS> --env-file ./variables.env --name <APP_CONTAINER> --network common-network <APP_IMAGE>
 ```
 
 ---
 
-## ▶️ Despliegue con Kubernetes
+## ▶️ Kubernetes
 
-⚙️ Encender Minikube
+1. Encender Minikube
 ```shell
 docker context use default
 minikube start
 ```
 
-⚙️ Crear imagen
+2. Crear imagen dentro del clúster
 ```shell
 eval $(minikube docker-env --shell bash)
-docker build -t miguelarmasabt/cryptography:v1.0.1 -f ./Dockerfile .
+docker build -t <APP_IMAGE> -f ./Dockerfile .
 ```
 
-⚙️ Crear namespace y aplicar manifiestos
+3. Crear namespace y aplicar manifiestos
 ```shell
-kubectl create namespace poc
-kubectl apply -f ./k8s.yaml -n poc
+kubectl create namespace demo
+kubectl apply -f ./k8s.yaml -n demo
 ```
 
-⚙️ Eliminar orquestación
+4. Eliminar orquestación
 ```shell
-kubectl delete -f ./k8s.yaml -n poc
+kubectl delete -f ./k8s.yaml -n demo
 ```
 
-⚙️ Port-forward
+5. Port-forward
 ```shell
-kubectl port-forward <pod-id> 8080:8080 -n poc
+kubectl port-forward <POD_ID> <APP_PORTS> -n demo
 ```
